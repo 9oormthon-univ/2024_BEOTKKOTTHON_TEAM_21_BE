@@ -1,6 +1,6 @@
-package com.teamkrews.dm.repository;
+package com.teamkrews.chat.repository;
 
-import com.teamkrews.dm.model.User;
+import com.teamkrews.chat.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

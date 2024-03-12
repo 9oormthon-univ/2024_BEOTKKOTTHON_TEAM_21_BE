@@ -1,8 +1,8 @@
-package com.teamkrews.dm.service;
+package com.teamkrews.chat.service;
 
 
-import com.teamkrews.dm.model.User;
-import com.teamkrews.dm.repository.UserRepository;
+import com.teamkrews.chat.model.User;
+import com.teamkrews.chat.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

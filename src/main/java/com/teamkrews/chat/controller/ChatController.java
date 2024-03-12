@@ -1,10 +1,9 @@
-package com.teamkrews.dm.controller;
+package com.teamkrews.chat.controller;
 
-import com.teamkrews.dm.model.Message;
+import com.teamkrews.chat.model.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 

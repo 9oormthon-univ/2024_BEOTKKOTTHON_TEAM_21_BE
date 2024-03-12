@@ -1,7 +1,7 @@
-package com.teamkrews.dm.controller;
+package com.teamkrews.chat.controller;
 
-import com.teamkrews.dm.model.ChatRoom;
-import com.teamkrews.dm.repository.ChatRoomRepository;
+import com.teamkrews.chat.model.ChatRoom;
+import com.teamkrews.chat.repository.ChatRoomRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

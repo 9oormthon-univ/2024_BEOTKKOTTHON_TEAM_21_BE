@@ -1,4 +1,4 @@
-package com.teamkrews.dm.model;
+package com.teamkrews.chat.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

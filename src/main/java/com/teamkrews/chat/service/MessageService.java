@@ -1,7 +1,7 @@
-package com.teamkrews.dm.service;
+package com.teamkrews.chat.service;
 
-import com.teamkrews.dm.model.Message;
-import com.teamkrews.dm.repository.MessageRepository;
+import com.teamkrews.chat.model.Message;
+import com.teamkrews.chat.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

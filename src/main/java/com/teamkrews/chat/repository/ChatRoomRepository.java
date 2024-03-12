@@ -1,6 +1,6 @@
-package com.teamkrews.dm.repository;
+package com.teamkrews.chat.repository;
 
-import com.teamkrews.dm.model.ChatRoom;
+import com.teamkrews.chat.model.ChatRoom;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
