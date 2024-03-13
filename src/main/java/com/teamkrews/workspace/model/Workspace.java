@@ -1,4 +1,4 @@
-package com.teamkrews.User.model;
+package com.teamkrews.workspace.model;
 
 import com.teamkrews.userworkspace.model.UserWorkspace;
 import jakarta.persistence.*;
@@ -8,20 +8,16 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
-@Setter
 @Getter
-public class User {
+@Setter
+public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nickName;
-    private String loginId;
-    private String email;
-    private String password;
-    private String profileImageUrl;
-    private String userUUID;
-
-    @OneToMany(mappedBy = "user")
+    private String teamName;
+    private String workspaceUUID;
+    @OneToMany(mappedBy = "workspace")
     private List<UserWorkspace> userWorkspaces;
+
+    //채팅룸 추가 예정
 }
