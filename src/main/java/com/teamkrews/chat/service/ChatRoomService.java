@@ -6,7 +6,6 @@ import com.teamkrews.chat.model.User;
 import com.teamkrews.chat.repository.ChatRoomRepository;
 import com.teamkrews.chat.repository.ChatRoomUserRepository;
 import com.teamkrews.chat.repository.UserRepository;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +51,11 @@ public class ChatRoomService {
         chatRoomUserRepository.save(chatRoomUser2);
 
         return chatRoom;
+    }
+
+    // 채팅방 조회
+    public ChatRoom getChatRoomById(Long chatRoomId) {
+        return chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new RuntimeException("채팅방을 찾을 수 없습니다: " + chatRoomId));
     }
 }
