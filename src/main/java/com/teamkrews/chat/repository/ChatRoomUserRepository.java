@@ -1,10 +1,11 @@
 package com.teamkrews.chat.repository;
 
-import com.teamkrews.chat.model.Message;
+import com.teamkrews.chat.model.ChatRoomUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface MessageRepository extends JpaRepository<Message, Long> {
-}
 
+@Repository
+public interface ChatRoomUserRepository extends JpaRepository<ChatRoomUser, Long> {
+
+}

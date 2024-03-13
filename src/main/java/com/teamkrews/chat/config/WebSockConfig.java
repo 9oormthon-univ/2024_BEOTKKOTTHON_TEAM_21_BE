@@ -27,7 +27,7 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
         // stomp 웹소켓 endpoint 설정
         // ws://localhost:8080/ws
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
+                .setAllowedOriginPatterns("*");
+//                .withSockJS();
     }
 }
