@@ -10,11 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/chatRoom")
 @Slf4j
 public class ChatRoomController {
 
@@ -22,7 +24,7 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     // 1:1 채팅방 생성
-    @PostMapping("chat/create/chatRoom/{userId1}/{userId2}")
+    @PostMapping("create/chatRoom/{userId1}/{userId2}")
     public ResponseEntity<ChatRoom> createChatRoom(@PathVariable Long userId1, @PathVariable Long userId2) {
         try {
             ChatRoom chatRoom = chatRoomService.createChatRoomWithUser(userId1, userId2);
@@ -34,7 +36,7 @@ public class ChatRoomController {
 
     // 채팅방 목록 조회
     // 나중에 내가 먼저 보낸 채팅방 & 받은 채팅방으로 분리하기
-    @GetMapping("/chat/list/chatRooms")
+    @GetMapping("/list/chatRooms")
     public ResponseEntity<List<ChatRoom>> getAllChatRooms() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAll();
         return ResponseEntity.ok(chatRooms);
