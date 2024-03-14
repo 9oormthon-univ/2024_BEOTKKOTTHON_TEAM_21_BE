@@ -1,4 +1,4 @@
-package com.teamkrews.chat.model;
+package com.teamkrews.User.model;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -20,4 +20,7 @@ public class User {
     private String password;
     private String profileImageUrl;
     private String userUUID;
+
+//    @OneToMany(mappedBy = "user")
+//    private List<UserWorkspace> userWorkspaces;
 }
