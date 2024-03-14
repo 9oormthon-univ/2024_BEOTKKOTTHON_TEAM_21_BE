@@ -3,7 +3,6 @@ package com.teamkrews.auth.service;
 
 
 import com.teamkrews.User.model.User;
-import com.teamkrews.auth.exception.LoginIdAlreadyExistsException;
 import com.teamkrews.auth.model.request.SignInDto;
 import com.teamkrews.auth.model.request.SignUpDto;
 import com.teamkrews.auth.model.response.AuthDto;
@@ -35,7 +34,7 @@ public class AuthService {
         Optional<User> userWrapper = userRepository.findByLoginId(dto.getLoginId());
 
         if (!userWrapper.isEmpty())
-            throw new LoginIdAlreadyExistsException("중복되는 로그인 아이디입니다: " + dto.getLoginId());
+            throw new CustomException(ErrorCode.LOGIN_ID_DUPLICATED);
 
 
         User user = mapper.map(dto, User.class);
