@@ -55,7 +55,7 @@ public class AuthService {
 
         if(userWrapper.isEmpty()){
             log.info("{} 에 해당하는 사용자가 없습니다.", loginId);
-            throw new IllegalArgumentException("loginId not found");
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
 
         User user = userWrapper.get();
