@@ -28,5 +28,6 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
         // ws://localhost:8080/ws
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*");
+//                .withSockJS();
     }
 }
