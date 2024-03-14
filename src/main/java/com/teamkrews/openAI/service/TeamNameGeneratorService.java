@@ -1,8 +1,6 @@
 package com.teamkrews.openAI.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,8 +11,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 @Slf4j
 @RequiredArgsConstructor
