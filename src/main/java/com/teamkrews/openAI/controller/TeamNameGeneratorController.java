@@ -14,11 +14,11 @@ public class TeamNameGeneratorController {
     private final TeamNameGeneratorService teamNameGeneratorService;
 
     @GetMapping("/generate/teamName")
-    public String generateTeamName(@RequestParam Long workspaceId, String seedWords) {
+    public String generateTeamName(String seedWords) {
         return teamNameGeneratorService.generateTeamName(seedWords);
     }
 
-    @PostMapping("/save/workspace/{workspaceId}/teamName")
+    @PostMapping("/save/teamName/workspace/{workspaceId}")
     public void saveSelectedTeamName(@PathVariable Long workspaceId, @RequestBody String selectedTeamName) {
         teamNameGeneratorService.saveTeamName(workspaceId, selectedTeamName);
     }
