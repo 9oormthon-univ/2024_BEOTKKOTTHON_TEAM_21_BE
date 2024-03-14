@@ -25,7 +25,7 @@ public class AuthController {
         return "Connect !";
     }
 
-    @PostMapping("")
+    @PostMapping("/signUp")
     public ResponseEntity<ApiResponse<UserInfoDto>> signUp(
             @Valid @RequestBody SignUpDto signUpDto
     ) {
