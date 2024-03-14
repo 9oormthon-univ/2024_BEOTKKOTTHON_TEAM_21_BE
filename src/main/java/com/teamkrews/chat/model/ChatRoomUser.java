@@ -1,5 +1,6 @@
 package com.teamkrews.chat.model;
 
+import com.teamkrews.User.model.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

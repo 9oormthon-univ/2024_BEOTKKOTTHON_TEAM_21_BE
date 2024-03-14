@@ -1,4 +1,4 @@
-package com.teamkrews.chat.config;
+package com.teamkrews.global;
 
 
 import org.springframework.context.annotation.Configuration;
