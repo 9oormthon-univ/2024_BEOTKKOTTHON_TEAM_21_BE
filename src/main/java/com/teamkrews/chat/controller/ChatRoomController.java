@@ -36,7 +36,7 @@ public class ChatRoomController {
 
     // 채팅방 목록 조회
     // 나중에 내가 먼저 보낸 채팅방 & 받은 채팅방으로 분리하기
-    @GetMapping("/list/chatRooms")
+    @GetMapping("")
     public ResponseEntity<List<ChatRoom>> getAllChatRooms() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAll();
         return ResponseEntity.ok(chatRooms);
