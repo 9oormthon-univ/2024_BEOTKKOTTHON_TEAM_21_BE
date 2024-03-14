@@ -47,8 +47,18 @@ public class WorkspaceService {
         return workspaceOptional.get();
     }
 
+
     public WorkspaceInfoResponse convertToInfoResponse(final String workspaceUUID){
         Workspace workspace = findByUUID(workspaceUUID);
+        List<UserInfoResponse> userInfoList = getUserInfoResponses(workspace);
+
+        WorkspaceInfoResponse infoResponse = mapper.map(workspace, WorkspaceInfoResponse.class);
+        infoResponse.setUserInfoResponseList(userInfoList);
+
+        return infoResponse;
+    }
+
+    public List<UserInfoResponse> getUserInfoResponses(Workspace workspace) {
         List<UserWorkspace> userWorkspaceList = userWorkspaceRepository.findAllByWorkspace(workspace);
 
         List<User> userList = userWorkspaceList.stream().map(
@@ -58,10 +68,6 @@ public class WorkspaceService {
         List<UserInfoResponse> userInfoList = userList.stream().map(
                 (e) -> mapper.map(e, UserInfoResponse.class)
         ).collect(Collectors.toList());
-
-        WorkspaceInfoResponse infoResponse = mapper.map(workspace, WorkspaceInfoResponse.class);
-        infoResponse.setUserInfoResponseList(userInfoList);
-
-        return infoResponse;
+        return userInfoList;
     }
 }
