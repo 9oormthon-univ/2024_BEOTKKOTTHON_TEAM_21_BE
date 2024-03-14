@@ -59,8 +59,9 @@ public class TeamNameGeneratorService {
     }
 
     // 선택한 팀명 저장
-    public void saveTeamName(String selectedTeamName) {
-        Workspace workspace = new Workspace();
+    public void saveTeamName(Long workspaceId, String selectedTeamName) {
+        Workspace workspace = workspaceRepository.findById(workspaceId)
+                .orElseThrow(() -> new IllegalArgumentException("Workspace with id " + workspaceId + " not found"));
         workspace.setTeamName(selectedTeamName);
         workspaceRepository.save(workspace);
     }

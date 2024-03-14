@@ -13,14 +13,13 @@ public class TeamNameGeneratorController {
 
     private final TeamNameGeneratorService teamNameGeneratorService;
 
-    // 향후 url에 {workspaceId} 추가하기
     @GetMapping("/generate/teamName")
-    public String generateTeamName(String seedWords) {
+    public String generateTeamName(@RequestParam Long workspaceId, String seedWords) {
         return teamNameGeneratorService.generateTeamName(seedWords);
     }
 
-    @PostMapping("/save/teamName")
-    public void saveSelectedTeamName(@RequestBody String selectedTeamName) {
-        teamNameGeneratorService.saveTeamName(selectedTeamName);
+    @PostMapping("/save/workspace/{workspaceId}/teamName")
+    public void saveSelectedTeamName(@RequestParam Long workspaceId, @RequestBody String selectedTeamName) {
+        teamNameGeneratorService.saveTeamName(workspaceId, selectedTeamName);
     }
 }
