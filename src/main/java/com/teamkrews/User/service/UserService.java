@@ -1,8 +1,9 @@
-package com.teamkrews.chat.service;
+package com.teamkrews.User.service;
 
 
-import com.teamkrews.chat.model.User;
-import com.teamkrews.chat.repository.UserRepository;
+
+import com.teamkrews.User.model.User;
+import com.teamkrews.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,16 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User getById(Long id) {
+    public User getById(Long id){
         Optional<User> byId = userRepository.findById(id);
 
-        if (byId.isEmpty()) {
+        if(byId.isEmpty()){
             log.info("id = {} 인 사용자가 존재하지 않습니다", id);
             throw new IllegalArgumentException();
         }
 
         return byId.get();
     }
+
+
 }
