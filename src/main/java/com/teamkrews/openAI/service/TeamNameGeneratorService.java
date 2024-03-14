@@ -1,6 +1,8 @@
 package com.teamkrews.openAI.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,6 +13,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,14 +27,15 @@ public class TeamNameGeneratorService {
     private final RestTemplate restTemplate;
     private final HttpHeaders httpHeaders;
 
-    public String generateTeamName(String seedWords) {
+    // 팀명 4개 생성
+    public String generateTeamName(String seedWords) { // 나중에 seedWords 리스트로 받아도 됨
 
         String[] seeds = seedWords.split(" ");
 
         // 시드 단어 최대 5개
-        String limitedSeeds = Stream.of(seeds)
+        String limitedSeedWords = Stream.of(seeds)
                 .limit(5)
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.joining(", "));
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", "gpt-3.5-turbo");
@@ -44,12 +49,19 @@ public class TeamNameGeneratorService {
                 }},
                 new HashMap<String, String>() {{
                     put("role", "user");
-                    put("content", String.format("시드 단어: %s.", limitedSeeds));
+                    put("content", String.format("시드 단어: %s.", limitedSeedWords));
                 }}
         });
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, httpHeaders);
 
         return restTemplate.postForObject(url, entity, String.class);
+    }
+
+    // 선택한 팀명 저장
+    public void saveTeamName(String selectedTeamName) {
+//        Workspace workspace = new Workspace();
+//        workspace.setTeamName(selectedTeamName);
+//        workspaceRepository.save(workspace);
     }
 }
