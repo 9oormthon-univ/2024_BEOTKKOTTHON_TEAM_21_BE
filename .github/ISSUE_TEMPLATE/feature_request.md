@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: Feature completion
 about: Feature Issue
 title: ''
 labels: ''

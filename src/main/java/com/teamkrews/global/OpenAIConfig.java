@@ -7,7 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-// ChatGPT 환경 구성
+
 @Configuration
 public class OpenAIConfig {
 
@@ -22,7 +22,7 @@ public class OpenAIConfig {
     @Bean
     public HttpHeaders httpHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + secretKey);
+        headers.setBearerAuth(secretKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
     }
