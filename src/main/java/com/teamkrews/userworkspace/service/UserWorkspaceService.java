@@ -1,5 +1,7 @@
 package com.teamkrews.userworkspace.service;
 
+import com.teamkrews.User.model.User;
+import com.teamkrews.User.model.response.UserInfoResponse;
 import com.teamkrews.userworkspace.model.UserWorkspace;
 
 import com.teamkrews.userworkspace.model.UserWorkspaceCreateDto;
@@ -12,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

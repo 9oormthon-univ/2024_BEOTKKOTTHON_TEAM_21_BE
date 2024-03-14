@@ -1,23 +1,33 @@
 package com.teamkrews.workspace.service;
 
 
+import com.teamkrews.User.model.User;
+import com.teamkrews.User.model.response.UserInfoResponse;
+import com.teamkrews.auth.model.response.UserInfoDto;
 import com.teamkrews.global.exception.CustomException;
 import com.teamkrews.global.exception.ErrorCode;
+import com.teamkrews.userworkspace.model.UserWorkspace;
+import com.teamkrews.userworkspace.repository.UserWorkspaceRepository;
+import com.teamkrews.userworkspace.service.UserWorkspaceService;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.model.WorkspaceCreateDto;
+import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
 import com.teamkrews.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class WorkspaceService {
     private final ModelMapper mapper;
     private final WorkspaceRepository workspaceRepository;
+    private final UserWorkspaceRepository userWorkspaceRepository;
 
     public Workspace create(final WorkspaceCreateDto dto){
         Workspace workspace = mapper.map(dto, Workspace.class);
@@ -35,5 +45,23 @@ public class WorkspaceService {
         }
 
         return workspaceOptional.get();
+    }
+
+    public WorkspaceInfoResponse convertToInfoResponse(final String workspaceUUID){
+        Workspace workspace = findByUUID(workspaceUUID);
+        List<UserWorkspace> userWorkspaceList = userWorkspaceRepository.findAllByWorkspace(workspace);
+
+        List<User> userList = userWorkspaceList.stream().map(
+                (e) -> e.getUser()
+        ).collect(Collectors.toList());
+
+        List<UserInfoResponse> userInfoList = userList.stream().map(
+                (e) -> mapper.map(e, UserInfoResponse.class)
+        ).collect(Collectors.toList());
+
+        WorkspaceInfoResponse infoResponse = mapper.map(workspace, WorkspaceInfoResponse.class);
+        infoResponse.setUserInfoResponseList(userInfoList);
+
+        return infoResponse;
     }
 }

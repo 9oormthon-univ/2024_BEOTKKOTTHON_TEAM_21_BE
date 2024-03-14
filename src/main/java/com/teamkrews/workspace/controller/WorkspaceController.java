@@ -35,8 +35,8 @@ public class WorkspaceController {
                                                               @Valid @RequestBody WorkspaceCreateRequest request){
         WorkspaceCreateDto dto = mapper.map(request, WorkspaceCreateDto.class);
         Workspace workspace = workspaceService.create(dto);
-        WorkspaceInfoResponse response = mapper.map(workspace, WorkspaceInfoResponse.class);
         userWorkspaceService.create(new UserWorkspaceCreateDto(user, workspace));
+        WorkspaceInfoResponse response = workspaceService.convertToInfoResponse(workspace.getWorkspaceUUID());
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
