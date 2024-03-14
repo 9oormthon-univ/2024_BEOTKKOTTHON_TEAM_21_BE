@@ -1,11 +1,14 @@
 package com.teamkrews.openAI.service;
 
+import com.teamkrews.workspace.model.Workspace;
+import com.teamkrews.workspace.repository.WorkspaceRepository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +25,7 @@ public class TeamNameGeneratorService {
 
     private final RestTemplate restTemplate;
     private final HttpHeaders httpHeaders;
+    private final WorkspaceRepository workspaceRepository;
 
     // 팀명 4개 생성
     public String generateTeamName(String seedWords) { // 나중에 seedWords 리스트로 받아도 됨
@@ -56,8 +60,8 @@ public class TeamNameGeneratorService {
 
     // 선택한 팀명 저장
     public void saveTeamName(String selectedTeamName) {
-//        Workspace workspace = new Workspace();
-//        workspace.setTeamName(selectedTeamName);
-//        workspaceRepository.save(workspace);
+        Workspace workspace = new Workspace();
+        workspace.setTeamName(selectedTeamName);
+        workspaceRepository.save(workspace);
     }
 }
