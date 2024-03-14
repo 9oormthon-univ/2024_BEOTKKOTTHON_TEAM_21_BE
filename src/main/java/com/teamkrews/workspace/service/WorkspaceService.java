@@ -48,7 +48,7 @@ public class WorkspaceService {
     }
 
 
-    public WorkspaceInfoResponse convertToInfoResponse(final String workspaceUUID){
+    public WorkspaceInfoResponse getWorkspaceInfoResponse(final String workspaceUUID){
         Workspace workspace = findByUUID(workspaceUUID);
         List<UserInfoResponse> userInfoList = getUserInfoResponses(workspace);
 
@@ -58,7 +58,7 @@ public class WorkspaceService {
         return infoResponse;
     }
 
-    public List<UserInfoResponse> getUserInfoResponses(Workspace workspace) {
+    private List<UserInfoResponse> getUserInfoResponses(Workspace workspace) {
         List<UserWorkspace> userWorkspaceList = userWorkspaceRepository.findAllByWorkspace(workspace);
 
         List<User> userList = userWorkspaceList.stream().map(

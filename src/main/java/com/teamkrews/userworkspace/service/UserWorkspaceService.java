@@ -45,6 +45,6 @@ public class UserWorkspaceService {
         UserWorkspaceCreateDto userWorkspaceCreateDto = new UserWorkspaceCreateDto(dto.getUser(), workspace);
         create(userWorkspaceCreateDto);
 
-        return workspaceService.convertToInfoResponse(workspaceUUID);
+        return workspaceService.getWorkspaceInfoResponse(workspaceUUID);
     }
 }

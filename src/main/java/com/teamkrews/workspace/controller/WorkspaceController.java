@@ -36,7 +36,7 @@ public class WorkspaceController {
         WorkspaceCreateDto dto = mapper.map(request, WorkspaceCreateDto.class);
         Workspace workspace = workspaceService.create(dto);
         userWorkspaceService.create(new UserWorkspaceCreateDto(user, workspace));
-        WorkspaceInfoResponse response = workspaceService.convertToInfoResponse(workspace.getWorkspaceUUID());
+        WorkspaceInfoResponse response = workspaceService.getWorkspaceInfoResponse(workspace.getWorkspaceUUID());
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -60,8 +60,7 @@ public class WorkspaceController {
             @AuthenticationPrincipal User user,
             @PathVariable String workspaceUUID
     ){
-        //workspace 에서의 userWorkspace List를 통해 찾아야함
-        userWorkspaceService.join(new UserWorkspaceJoinDto(user, workspaceUUID));
-        return ResponseEntity.ok(ApiResponse.success(null));
+        WorkspaceInfoResponse response = workspaceService.getWorkspaceInfoResponse(workspaceUUID);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
