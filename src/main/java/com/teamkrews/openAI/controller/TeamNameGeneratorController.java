@@ -19,7 +19,7 @@ public class TeamNameGeneratorController {
     }
 
     @PostMapping("/save/workspace/{workspaceId}/teamName")
-    public void saveSelectedTeamName(@RequestParam Long workspaceId, @RequestBody String selectedTeamName) {
+    public void saveSelectedTeamName(@PathVariable Long workspaceId, @RequestBody String selectedTeamName) {
         teamNameGeneratorService.saveTeamName(workspaceId, selectedTeamName);
     }
 }
