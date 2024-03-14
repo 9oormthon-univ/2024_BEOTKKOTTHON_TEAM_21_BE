@@ -3,12 +3,13 @@ package com.teamkrews.auth.service;
 
 
 import com.teamkrews.User.model.User;
-import com.teamkrews.auth.exception.LoginIdAlreadyExistsException;
 import com.teamkrews.auth.model.request.SignInDto;
 import com.teamkrews.auth.model.request.SignUpDto;
 import com.teamkrews.auth.model.response.AuthDto;
 import com.teamkrews.auth.model.response.UserInfoDto;
 import com.teamkrews.User.repository.UserRepository;
+import com.teamkrews.global.exception.CustomException;
+import com.teamkrews.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class AuthService {
         Optional<User> userWrapper = userRepository.findByLoginId(dto.getLoginId());
 
         if (!userWrapper.isEmpty())
-            throw new LoginIdAlreadyExistsException("중복되는 로그인 아이디입니다: " + dto.getLoginId());
+            throw new CustomException(ErrorCode.LOGIN_ID_DUPLICATED);
 
 
         User user = mapper.map(dto, User.class);
@@ -53,14 +54,14 @@ public class AuthService {
 
         if(userWrapper.isEmpty()){
             log.info("{} 에 해당하는 사용자가 없습니다.", loginId);
-            throw new IllegalArgumentException("loginId not found");
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
 
         User user = userWrapper.get();
 
         if(!passwordEncoder.matches(password, user.getPassword())){
-            log.info("패스워드가 일치하지 않습니다. loginId = {}, pwd = {}", loginId, password);
-            throw new IllegalArgumentException("loginId not found");
+            log.info("패스워드 또는 아이디 정보가 일치하지 않습니다. loginId = {}, pwd = {}", loginId, password);
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
 
         return new AuthDto(user.getUserUUID(), jwtService.createAccessToken(user.getId()));

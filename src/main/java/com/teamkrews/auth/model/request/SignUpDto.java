@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignUpDto {
-
     @Email
     private String email;
 
@@ -18,4 +17,10 @@ public class SignUpDto {
 
     @Min(8)
     private String password;
+
+    @NotNull
+    private String nickName;
+
+    @NotNull
+    private String profileImageUrl;
 }

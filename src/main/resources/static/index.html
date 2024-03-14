@@ -28,15 +28,33 @@
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 <script type="text/javascript">
     var stompClient = null;
+    var chatRoomId = [[${chatRoomId}]];
+    var chatList = [[${chatList}]];
+
+    function setConnected(connected) {
+        $("#connect").prop("disabled", connected);
+        $("#disconnect").prop("disabled", !connected);
+
+        if (connected) {
+            $("#conversation").show();
+        }
+        else {
+            $("#conversation").hide();
+        }
+        $("#chatting").html("");
+    }
 
     function connect() {
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function (frame) {
+            setConnected(true);
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/sub/public', function (message) {
-                showMessage(JSON.parse(message.body).content);
+            loadChat(chatList)
+
+            stompClient.subscribe('pub/chat/room/' + chatRoomId, function (message) {
+                showMessage(JSON.parse(message.body));
             });
         });
     }
@@ -45,33 +63,51 @@
         if (stompClient !== null) {
             stompClient.disconnect();
         }
+        setConnected(false);
         console.log("Disconnected");
     }
 
     function sendMessage() {
-        var messageContent = document.getElementById('messageInput').value;
-        if(messageContent && stompClient) {
-            var chatMessage = {
-                content: messageContent,
-                type: 'CHAT'
-            };
-            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-            document.getElementById('messageInput').value = '';
+        stompClient.send("/pub/"+chatRoomId, {},
+        JSON.stringify({
+            'sender': $("#senderId").val(),
+            'content': $("#content").val()
+        }));
+    }
+
+    function loadChat(chatList) {
+        if (chatList != null) {
+            for (chat in chatList) {
+                $("#chatting").append(
+                    "<tr><td>" + "[" + chatList[chat].senderId + "]" + chatList[chat].message + "</td></tr>"
+                );
+            }
         }
     }
 
     function showMessage(message) {
-        var messageArea = document.getElementById('messageArea');
-        var messageElement = document.createElement('li');
-        messageElement.appendChild(document.createTextNode(message));
-        messageArea.appendChild(messageElement);
-        messageArea.scrollTop = messageArea.scrollHeight;
+        $("#chatting").append(
+            "<tr><td>" + "[" + message.senderId + "]" + message.content + "</td></tr>"
+        )
     }
 
-    document.addEventListener("DOMContentLoaded", function(event) {
-        connect();
-        document.getElementById("sendButton").addEventListener("click", sendMessage, true);
+    $(function () {
+        $("form").on('submit', function (e) {
+            e.preventDefault();
+        });
+        $("#connect").click(function () {connect();});
+        $("#disconnect").click(function () {disconnect();});
+        $("#send").click(function () {sendMessage();});
     });
+</script>
+<script>
+    window.onload = function (){
+        connect();
+    }
+
+    window.BeforeUnloadEvent = function () {
+        disconnect();
+    }
 </script>
 </body>
 </html>
