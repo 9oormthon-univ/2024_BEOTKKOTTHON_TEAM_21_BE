@@ -2,10 +2,10 @@ package com.teamkrews.chat.service;
 
 import com.teamkrews.chat.model.ChatRoom;
 import com.teamkrews.chat.model.ChatRoomUser;
-import com.teamkrews.chat.model.User;
+import com.teamkrews.User.model.User;
 import com.teamkrews.chat.repository.ChatRoomRepository;
 import com.teamkrews.chat.repository.ChatRoomUserRepository;
-import com.teamkrews.chat.repository.UserRepository;
+import com.teamkrews.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
