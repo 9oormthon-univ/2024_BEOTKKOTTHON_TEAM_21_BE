@@ -6,10 +6,11 @@ import com.teamkrews.User.model.User;
 import com.teamkrews.chat.repository.ChatRoomRepository;
 import com.teamkrews.chat.repository.ChatRoomUserRepository;
 import com.teamkrews.User.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public class ChatRoomService {
@@ -17,14 +18,6 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomUserRepository chatRoomUserRepository;
     private final UserRepository userRepository;
-
-    @Autowired
-    public ChatRoomService(ChatRoomRepository chatRoomRepository,
-                           UserRepository userRepository, ChatRoomUserRepository chatRoomUserRepository) {
-        this.chatRoomRepository = chatRoomRepository;
-        this.chatRoomUserRepository = chatRoomUserRepository;
-        this.userRepository = userRepository;
-    }
 
     // 1:1 채팅방 생성
     public ChatRoom createChatRoomWithUser(Long userId1, Long userId2) {
@@ -51,5 +44,11 @@ public class ChatRoomService {
         chatRoomUserRepository.save(chatRoomUser2);
 
         return chatRoom;
+    }
+
+    // 채팅방 조회
+    public ChatRoom getChatRoomById(Long chatRoomId) {
+        return chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new RuntimeException("채팅방을 찾을 수 없습니다: " + chatRoomId));
     }
 }
