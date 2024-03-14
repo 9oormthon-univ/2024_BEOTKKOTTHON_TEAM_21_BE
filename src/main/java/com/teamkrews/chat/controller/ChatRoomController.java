@@ -4,8 +4,8 @@ import com.teamkrews.chat.model.ChatRoom;
 import com.teamkrews.chat.repository.ChatRoomRepository;
 import com.teamkrews.chat.service.ChatRoomService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,18 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+@RequiredArgsConstructor
 @RestController
 @Slf4j
 public class ChatRoomController {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomService chatRoomService;
-
-    @Autowired
-    public ChatRoomController(ChatRoomRepository chatRoomRepository, ChatRoomService chatRoomService) {
-        this.chatRoomRepository = chatRoomRepository;
-        this.chatRoomService = chatRoomService;
-    }
 
     // 1:1 채팅방 생성
     @PostMapping("chat/create/chatRoom/{userId1}/{userId2}")
