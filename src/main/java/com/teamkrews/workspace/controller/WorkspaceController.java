@@ -23,7 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/workspaces")
+@RequestMapping("/workspaces")
 @RequiredArgsConstructor
 public class WorkspaceController {
     private final ModelMapper mapper;
@@ -47,12 +47,12 @@ public class WorkspaceController {
     }
 
     @PostMapping("/{workspaceUUID}/join")
-    ResponseEntity<ApiResponse<Void>> join(@AuthenticationPrincipal User user,
+    ResponseEntity<ApiResponse<WorkspaceInfoResponse>> join(@AuthenticationPrincipal User user,
                                                             @PathVariable String workspaceUUID){
         UserWorkspaceJoinDto joinDto = new UserWorkspaceJoinDto(user, workspaceUUID);
-        UserWorkspace join = userWorkspaceService.join(joinDto);
+        WorkspaceInfoResponse infoResponse = userWorkspaceService.join(joinDto);
 
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(ApiResponse.success(infoResponse));
     }
 
     @GetMapping("/{workspaceUUID}")
@@ -60,11 +60,8 @@ public class WorkspaceController {
             @AuthenticationPrincipal User user,
             @PathVariable String workspaceUUID
     ){
-        Workspace workspace = workspaceService.findByUUID(workspaceUUID);
         //workspace 에서의 userWorkspace List를 통해 찾아야함
+        userWorkspaceService.join(new UserWorkspaceJoinDto(user, workspaceUUID));
         return ResponseEntity.ok(ApiResponse.success(null));
     }
-
-
-
 }

@@ -8,15 +8,15 @@ import com.teamkrews.userworkspace.model.UserWorkspaceCreateDto;
 import com.teamkrews.userworkspace.model.UserWorkspaceJoinDto;
 import com.teamkrews.userworkspace.repository.UserWorkspaceRepository;
 import com.teamkrews.workspace.model.Workspace;
+import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
 import com.teamkrews.workspace.service.WorkspaceService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +38,13 @@ public class UserWorkspaceService {
     }
 
     @Transactional
-    public UserWorkspace join(UserWorkspaceJoinDto dto){
-        Workspace workspace = workspaceService.findByUUID(dto.getWorkspaceUUID());
+    public WorkspaceInfoResponse join(UserWorkspaceJoinDto dto){
+        final String workspaceUUID = dto.getWorkspaceUUID();
 
+        Workspace workspace = workspaceService.findByUUID(dto.getWorkspaceUUID());
         UserWorkspaceCreateDto userWorkspaceCreateDto = new UserWorkspaceCreateDto(dto.getUser(), workspace);
-        return create(userWorkspaceCreateDto);
+        create(userWorkspaceCreateDto);
+
+        return workspaceService.convertToInfoResponse(workspaceUUID);
     }
 }
