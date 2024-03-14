@@ -1,10 +1,13 @@
 package com.teamkrews.User.model;
 
+import com.teamkrews.userworkspace.model.UserWorkspace;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -21,6 +24,6 @@ public class User {
     private String profileImageUrl;
     private String userUUID;
 
-//    @OneToMany(mappedBy = "user")
-//    private List<UserWorkspace> userWorkspaces;
+    @OneToMany(mappedBy = "user")
+    private List<UserWorkspace> userWorkspaces;
 }
