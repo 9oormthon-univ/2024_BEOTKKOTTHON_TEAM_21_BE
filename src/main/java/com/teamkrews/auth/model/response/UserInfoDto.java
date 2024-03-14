@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserInfoDto {
-    private String name;
+    private String nickName;
     private String userUUID;
+    private String profileImageUrl;
 }
