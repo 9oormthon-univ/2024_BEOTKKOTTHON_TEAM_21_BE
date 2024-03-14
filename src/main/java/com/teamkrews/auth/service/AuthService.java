@@ -9,6 +9,8 @@ import com.teamkrews.auth.model.request.SignUpDto;
 import com.teamkrews.auth.model.response.AuthDto;
 import com.teamkrews.auth.model.response.UserInfoDto;
 import com.teamkrews.User.repository.UserRepository;
+import com.teamkrews.global.exception.CustomException;
+import com.teamkrews.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,8 +61,8 @@ public class AuthService {
         User user = userWrapper.get();
 
         if(!passwordEncoder.matches(password, user.getPassword())){
-            log.info("패스워드가 일치하지 않습니다. loginId = {}, pwd = {}", loginId, password);
-            throw new IllegalArgumentException("loginId not found");
+            log.info("패스워드 또는 아이디 정보가 일치하지 않습니다. loginId = {}, pwd = {}", loginId, password);
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
 
         return new AuthDto(user.getUserUUID(), jwtService.createAccessToken(user.getId()));
