@@ -9,6 +9,7 @@ import com.teamkrews.userworkspace.model.UserWorkspaceJoinDto;
 import com.teamkrews.userworkspace.service.UserWorkspaceService;
 import com.teamkrews.utill.ApiResponse;
 import com.teamkrews.workspace.model.Workspace;
+import com.teamkrews.workspace.model.WorkspaceCreateDto;
 import com.teamkrews.workspace.model.request.WorkspaceCreateRequest;
 import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
 import com.teamkrews.workspace.service.WorkspaceService;
@@ -32,7 +33,8 @@ public class WorkspaceController {
     @PostMapping()
     ResponseEntity<ApiResponse<WorkspaceInfoResponse>> create(@AuthenticationPrincipal User user,
                                                               @Valid @RequestBody WorkspaceCreateRequest request){
-        Workspace workspace = workspaceService.create(request.getTeamName());
+        WorkspaceCreateDto dto = mapper.map(request, WorkspaceCreateDto.class);
+        Workspace workspace = workspaceService.create(dto);
         WorkspaceInfoResponse response = mapper.map(workspace, WorkspaceInfoResponse.class);
         userWorkspaceService.create(new UserWorkspaceCreateDto(user, workspace));
 
