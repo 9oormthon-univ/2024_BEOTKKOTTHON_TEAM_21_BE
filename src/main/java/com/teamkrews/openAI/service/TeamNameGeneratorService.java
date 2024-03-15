@@ -59,7 +59,7 @@ public class TeamNameGeneratorService {
     }
 
     // 선택한 팀명 저장
-    public void saveTeamName(Long workspaceUUID, String selectedTeamName) {
+    public void saveTeamName(String workspaceUUID, String selectedTeamName) {
         Workspace workspace = workspaceRepository.findById(workspaceUUID)
                 .orElseThrow(() -> new IllegalArgumentException("Workspace with uuid " + workspaceUUID + " not found"));
         workspace.setTeamName(selectedTeamName);
