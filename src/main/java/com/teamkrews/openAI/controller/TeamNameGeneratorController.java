@@ -18,8 +18,8 @@ public class TeamNameGeneratorController {
         return teamNameGeneratorService.generateTeamName(seedWords);
     }
 
-    @PostMapping("/save/teamName/workspace/{workspaceId}")
-    public void saveSelectedTeamName(@PathVariable Long workspaceId, @RequestBody String selectedTeamName) {
-        teamNameGeneratorService.saveTeamName(workspaceId, selectedTeamName);
+    @PostMapping("/save/teamName/workspace/{workspaceUUID}")
+    public void saveSelectedTeamName(@PathVariable String workspaceUUID, @RequestBody String selectedTeamName) {
+        teamNameGeneratorService.saveTeamName(workspaceUUID, selectedTeamName);
     }
 }
