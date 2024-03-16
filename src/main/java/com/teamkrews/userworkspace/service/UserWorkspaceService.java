@@ -1,11 +1,12 @@
 package com.teamkrews.userworkspace.service;
 
 import com.teamkrews.User.model.User;
-import com.teamkrews.User.model.response.UserInfoResponse;
 import com.teamkrews.userworkspace.model.UserWorkspace;
 
 import com.teamkrews.userworkspace.model.UserWorkspaceCreateDto;
 import com.teamkrews.userworkspace.model.UserWorkspaceJoinDto;
+import com.teamkrews.userworkspace.model.response.UserWorkspaceInfo;
+import com.teamkrews.userworkspace.model.response.UserWorkspaceInfoResponses;
 import com.teamkrews.userworkspace.repository.UserWorkspaceRepository;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
@@ -15,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -46,5 +49,20 @@ public class UserWorkspaceService {
         create(userWorkspaceCreateDto);
 
         return workspaceService.getWorkspaceInfoResponse(workspaceUUID);
+    }
+
+    public UserWorkspaceInfoResponses findAllByUser(User user){
+        List<UserWorkspace> userWorkspaces = userWorkspaceRepository.findAllByUser(user);
+
+        List<Workspace> workspaceList = userWorkspaces.stream().map(
+                (e) -> e.getWorkspace()
+        ).collect(Collectors.toList());
+
+        List<UserWorkspaceInfo> userWorkspaceInfos = workspaceList.stream().map(
+                (e) -> mapper.map(e, UserWorkspaceInfo.class)
+        ).collect(Collectors.toList());
+
+        UserWorkspaceInfoResponses userWorkspaceInfoResponses = new UserWorkspaceInfoResponses(user.getId(), user.getNickName(), userWorkspaceInfos);
+        return userWorkspaceInfoResponses;
     }
 }
