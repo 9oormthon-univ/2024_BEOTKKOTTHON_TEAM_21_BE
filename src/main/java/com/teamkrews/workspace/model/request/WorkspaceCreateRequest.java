@@ -9,9 +9,7 @@ import lombok.Setter;
 public class WorkspaceCreateRequest {
     @NotNull
     private String teamName;
-
     @NotNull
     private String profileImageUrl;
-
-
+    private String explanation;
 }

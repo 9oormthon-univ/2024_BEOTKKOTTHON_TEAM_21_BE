@@ -19,6 +19,6 @@ public class Workspace {
     @OneToMany(mappedBy = "workspace")
     private List<UserWorkspace> userWorkspaces;
     private String profileImageUrl;
-
+    private String explanation;
     //채팅룸 추가 예정
 }

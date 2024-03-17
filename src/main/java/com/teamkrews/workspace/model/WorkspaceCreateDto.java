@@ -13,4 +13,5 @@ public class WorkspaceCreateDto {
     @NotNull
     private String profileImageUrl;
 
+    private String explanation;
 }

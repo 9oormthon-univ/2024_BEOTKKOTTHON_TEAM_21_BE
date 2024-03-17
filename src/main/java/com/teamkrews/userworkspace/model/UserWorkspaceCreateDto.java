@@ -11,6 +11,7 @@ import lombok.Setter;
 public class UserWorkspaceCreateDto {
     private User user;
     private Workspace workspace;
+    private String explanation;
 
     public UserWorkspaceCreateDto(User user, Workspace workspace) {
         this.user = user;
