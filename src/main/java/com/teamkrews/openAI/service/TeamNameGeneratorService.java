@@ -1,17 +1,20 @@
 package com.teamkrews.openAI.service;
 
+import com.teamkrews.openAI.model.request.SeedWords;
+import com.teamkrews.openAI.model.response.TeamNames;
+import com.teamkrews.utill.ApiResponse;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.repository.WorkspaceRepository;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,14 +31,11 @@ public class TeamNameGeneratorService {
     private final WorkspaceRepository workspaceRepository;
 
     // 팀명 4개 생성
-    public String generateTeamName(String seedWords) { // 나중에 seedWords 리스트로 받아도 됨
+    public List<String> generateTeamName(SeedWords request) {
 
-        String[] seeds = seedWords.split(" ");
+        final List<String> seedWords = request.getSeedWords();
 
-        // 시드 단어 최대 5개
-        String limitedSeedWords = Stream.of(seeds)
-                .limit(5)
-                .collect(Collectors.joining(", "));
+        String seedWordsStr = String.join(", ", seedWords);
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", "gpt-3.5-turbo");
@@ -49,20 +49,30 @@ public class TeamNameGeneratorService {
                 }},
                 new HashMap<String, String>() {{
                     put("role", "user");
-                    put("content", String.format("시드 단어: %s.", limitedSeedWords));
+                    put("content", String.format("시드 단어: %s.", seedWordsStr));
                 }}
         });
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, httpHeaders);
 
-        return restTemplate.postForObject(url, entity, String.class);
+        String generatedTeamNames = restTemplate.postForObject(url, entity, String.class);
+
+        List<String> teamNames = parse(generatedTeamNames);
+
+        return teamNames;
+    }
+
+    private List<String> parse(String generatedTeamNames) {
+        return Arrays.asList(generatedTeamNames.split(","));
     }
 
     // 선택한 팀명 저장
-    public void saveTeamName(String workspaceUUID, String selectedTeamName) {
+    public Workspace saveTeamName(String workspaceUUID, String selectedTeamName) {
         Workspace workspace = workspaceRepository.findById(workspaceUUID)
                 .orElseThrow(() -> new IllegalArgumentException("Workspace with uuid " + workspaceUUID + " not found"));
         workspace.setTeamName(selectedTeamName);
         workspaceRepository.save(workspace);
+
+        return workspace;
     }
 }
