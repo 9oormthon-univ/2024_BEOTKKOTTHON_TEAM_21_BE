@@ -9,4 +9,5 @@ public class UserWorkspaceInfo {
     private String workspaceUUID;
     private String teamName;
     private String profileImageUrl;
+    private String explanation;
 }
