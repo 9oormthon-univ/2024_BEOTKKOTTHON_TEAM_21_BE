@@ -20,13 +20,13 @@ public class TeamNameGeneratorController {
     private final TeamNameGeneratorService teamNameGeneratorService;
 
     @PostMapping("/generate/teamNames")
-    public ResponseEntity<TeamNames> generateTeamName(@RequestBody SeedWords request) {
-        TeamNames response = new TeamNames();
+    public ResponseEntity<ApiResponse<TeamNames>> generateTeamName(@RequestBody SeedWords request) {
+        List<String> teamNamesList = teamNameGeneratorService.generateTeamName(request);
 
-        List<String> teamNames = teamNameGeneratorService.generateTeamName(request);
-        response.setTeamNames(teamNames);
+        TeamNames teamNames = new TeamNames();
+        teamNames.setTeamNames(teamNamesList);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(teamNames));
     }
 
     @PostMapping("/save/teamName/workspace/{workspaceUUID}")
