@@ -3,12 +3,10 @@ package com.teamkrews.workspace.service;
 
 import com.teamkrews.User.model.User;
 import com.teamkrews.User.model.response.UserInfoResponse;
-import com.teamkrews.auth.model.response.UserInfoDto;
 import com.teamkrews.global.exception.CustomException;
 import com.teamkrews.global.exception.ErrorCode;
 import com.teamkrews.userworkspace.model.UserWorkspace;
 import com.teamkrews.userworkspace.repository.UserWorkspaceRepository;
-import com.teamkrews.userworkspace.service.UserWorkspaceService;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.model.WorkspaceCreateDto;
 import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
