@@ -1,7 +1,6 @@
 package com.teamkrews.workspace.model;
 
 import com.teamkrews.chat.model.ChatRoom;
-import com.teamkrews.chat.model.ChatRoomUser;
 import com.teamkrews.userworkspace.model.UserWorkspace;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +20,7 @@ public class Workspace {
     @OneToMany(mappedBy = "workspace")
     private List<UserWorkspace> userWorkspaces;
     private String profileImageUrl;
+    private String explanation;
 
     @OneToMany(mappedBy = "workspace")
     private List<ChatRoom> chatRooms;

@@ -9,8 +9,10 @@ import com.teamkrews.userworkspace.model.UserWorkspace;
 import com.teamkrews.userworkspace.repository.UserWorkspaceRepository;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.model.WorkspaceCreateDto;
+import com.teamkrews.workspace.model.WorkspaceUpdateDto;
 import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
 import com.teamkrews.workspace.repository.WorkspaceRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class WorkspaceService {
     private final WorkspaceRepository workspaceRepository;
     private final UserWorkspaceRepository userWorkspaceRepository;
 
+    @Transactional
     public Workspace create(final WorkspaceCreateDto dto){
         Workspace workspace = mapper.map(dto, Workspace.class);
         workspace.setWorkspaceUUID(UUID.randomUUID().toString());
@@ -67,5 +70,19 @@ public class WorkspaceService {
                 (e) -> mapper.map(e, UserInfoResponse.class)
         ).collect(Collectors.toList());
         return userInfoList;
+    }
+
+    @Transactional
+    public WorkspaceInfoResponse update(final WorkspaceUpdateDto dto){
+        Workspace workspace = findByUUID(dto.getWorkspaceUUID());
+
+        workspace.setTeamName(dto.getTeamName());
+        workspace.setExplanation(dto.getExplanation());
+
+        WorkspaceInfoResponse infoResponse = mapper.map(workspace, WorkspaceInfoResponse.class);
+        List<UserInfoResponse> userInfoList = getUserInfoResponses(workspace);
+        infoResponse.setUserInfoResponseList(userInfoList);
+
+        return infoResponse;
     }
 }
