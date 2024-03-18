@@ -1,9 +1,12 @@
 package com.teamkrews.userworkspace.service;
 
 import com.teamkrews.User.model.User;
+import com.teamkrews.global.exception.CustomException;
+import com.teamkrews.global.exception.ErrorCode;
 import com.teamkrews.userworkspace.model.UserWorkspace;
 
 import com.teamkrews.userworkspace.model.UserWorkspaceCreateDto;
+import com.teamkrews.userworkspace.model.UserWorkspaceDeleteDto;
 import com.teamkrews.userworkspace.model.UserWorkspaceJoinDto;
 import com.teamkrews.userworkspace.model.response.UserWorkspaceInfo;
 import com.teamkrews.userworkspace.model.response.UserWorkspaceInfoResponses;
@@ -64,5 +67,19 @@ public class UserWorkspaceService {
 
         UserWorkspaceInfoResponses userWorkspaceInfoResponses = new UserWorkspaceInfoResponses(user.getId(), user.getNickName(), userWorkspaceInfos);
         return userWorkspaceInfoResponses;
+    }
+
+    @Transactional
+    public UserWorkspaceInfoResponses deleteUserWorkspace(UserWorkspaceDeleteDto dto){
+        final String workspaceUUID = dto.getWorkspaceUUID();
+        Workspace workspace = workspaceService.findByUUID(workspaceUUID);
+        Optional<UserWorkspace> userWorkspaceOptional = userWorkspaceRepository.findByUserAndWorkspace(dto.getUser(), workspace);
+
+        if (userWorkspaceOptional.isEmpty())
+            throw new CustomException(ErrorCode.USER_WORKSPACE_NOT_FOUND);
+
+        userWorkspaceRepository.delete(userWorkspaceOptional.get());
+
+        return findAllByUser(dto.getUser());
     }
 }

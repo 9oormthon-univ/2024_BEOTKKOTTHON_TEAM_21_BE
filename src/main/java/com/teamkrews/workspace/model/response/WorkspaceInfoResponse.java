@@ -12,5 +12,6 @@ public class WorkspaceInfoResponse {
     private String workspaceUUID;
     private String teamName;
     private String profileImageUrl;
+    private String explanation;
     private List<UserInfoResponse> userInfoResponseList;
 }

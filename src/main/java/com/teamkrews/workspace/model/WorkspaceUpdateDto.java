@@ -1,17 +1,12 @@
 package com.teamkrews.workspace.model;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class WorkspaceCreateDto {
-    @NotNull
+public class WorkspaceUpdateDto {
+    private String workspaceUUID;
     private String teamName;
-
-    @NotNull
-    private String profileImageUrl;
-
     private String explanation;
 }

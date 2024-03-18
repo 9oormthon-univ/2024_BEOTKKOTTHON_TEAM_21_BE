@@ -3,14 +3,15 @@ package com.teamkrews.workspace.controller;
 
 import com.teamkrews.User.model.User;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
-import com.teamkrews.userworkspace.model.UserWorkspace;
 import com.teamkrews.userworkspace.model.UserWorkspaceCreateDto;
 import com.teamkrews.userworkspace.model.UserWorkspaceJoinDto;
 import com.teamkrews.userworkspace.service.UserWorkspaceService;
 import com.teamkrews.utill.ApiResponse;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.model.WorkspaceCreateDto;
+import com.teamkrews.workspace.model.WorkspaceUpdateDto;
 import com.teamkrews.workspace.model.request.WorkspaceCreateRequest;
+import com.teamkrews.workspace.model.request.WorkspaceUpdateRequest;
 import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
 import com.teamkrews.workspace.service.WorkspaceService;
 import jakarta.validation.Valid;
@@ -61,6 +62,19 @@ public class WorkspaceController {
             @PathVariable String workspaceUUID
     ){
         WorkspaceInfoResponse response = workspaceService.getWorkspaceInfoResponse(workspaceUUID);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PatchMapping("/{workspaceUUID}")
+    ResponseEntity<ApiResponse<WorkspaceInfoResponse>> update(
+            @AuthenticationPrincipal User user,
+            @PathVariable String workspaceUUID,
+            @RequestBody WorkspaceUpdateRequest request
+    ){
+        WorkspaceUpdateDto dto = mapper.map(request, WorkspaceUpdateDto.class);
+        dto.setWorkspaceUUID(workspaceUUID);
+
+        WorkspaceInfoResponse response = workspaceService.update(dto);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

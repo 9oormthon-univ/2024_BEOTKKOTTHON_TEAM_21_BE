@@ -1,15 +1,11 @@
 package com.teamkrews.workspace.model.request;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class WorkspaceCreateRequest {
-    @NotNull
+public class WorkspaceUpdateRequest {
     private String teamName;
-    @NotNull
-    private String profileImageUrl;
     private String explanation;
 }

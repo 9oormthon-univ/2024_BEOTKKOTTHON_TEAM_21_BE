@@ -1,5 +1,7 @@
 package com.teamkrews.auth.service;
 
+import com.teamkrews.global.exception.CustomException;
+import com.teamkrews.global.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -79,7 +81,7 @@ public class JwtService {
             return true;
         } catch (Exception e) {
             log.info("토큰 인증 실패");
-            throw new IllegalArgumentException();
+            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
         }
     };
 
