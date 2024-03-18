@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class WorkspaceInfoResponse {
+    private Long workspaceId;
     private String workspaceUUID;
     private String teamName;
     private String profileImageUrl;
