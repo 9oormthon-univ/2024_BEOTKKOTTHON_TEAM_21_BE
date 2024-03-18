@@ -1,5 +1,7 @@
 package com.teamkrews.workspace.model;
 
+import com.teamkrews.chat.model.ChatRoom;
+import com.teamkrews.chat.model.ChatRoomUser;
 import com.teamkrews.userworkspace.model.UserWorkspace;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,5 +22,6 @@ public class Workspace {
     private List<UserWorkspace> userWorkspaces;
     private String profileImageUrl;
 
-    //채팅룸 추가 예정
+    @OneToMany(mappedBy = "workspace")
+    private List<ChatRoom> chatRooms;
 }

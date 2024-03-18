@@ -21,7 +21,7 @@ public class ChatRoomUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_room_user_id")
-    private Long chatRoomUserId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
@@ -30,5 +30,4 @@ public class ChatRoomUser {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 }

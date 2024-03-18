@@ -2,12 +2,9 @@ package com.teamkrews.User.model;
 
 import com.teamkrews.userworkspace.model.UserWorkspace;
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Table(name = "user")

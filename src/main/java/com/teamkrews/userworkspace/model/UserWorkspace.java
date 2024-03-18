@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 public class UserWorkspace {
     @Id
+    @Column(name = "user_workspace_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -1,6 +1,8 @@
 package com.teamkrews.userworkspace.service;
 
 import com.teamkrews.User.model.User;
+import com.teamkrews.User.repository.UserRepository;
+import com.teamkrews.chat.model.ChatRoom;
 import com.teamkrews.userworkspace.model.UserWorkspace;
 
 import com.teamkrews.userworkspace.model.UserWorkspaceCreateDto;
@@ -12,6 +14,7 @@ import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
 import com.teamkrews.workspace.service.WorkspaceService;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
