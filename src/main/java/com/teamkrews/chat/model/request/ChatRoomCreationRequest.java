@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChatRoomCreationRequest {
-    private Long workspaceId;
+    private String workspaceUUID;
     private Long currentUserId;
     private Long targetUserId;
 }
