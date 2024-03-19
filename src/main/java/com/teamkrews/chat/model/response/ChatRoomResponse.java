@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class ChatRoomResponse {
     private Long chatRoomId;
-    private Long workspaceId;
+    private String workspaceUUID;
 }

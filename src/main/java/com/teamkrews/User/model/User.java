@@ -1,8 +1,6 @@
 package com.teamkrews.User.model;
 
-import com.teamkrews.userworkspace.model.UserWorkspace;
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +18,4 @@ public class User {
     private String password;
     private String profileImageUrl;
     private String userUUID;
-
-    @OneToMany(mappedBy = "user")
-    private List<UserWorkspace> userWorkspaces;
 }
