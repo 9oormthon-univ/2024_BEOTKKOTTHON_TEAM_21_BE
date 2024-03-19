@@ -1,18 +1,13 @@
 package com.teamkrews.chat.controller;
 
 import com.teamkrews.User.model.User;
-import com.teamkrews.User.repository.UserRepository;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
 import com.teamkrews.chat.model.ChatRoom;
-import com.teamkrews.chat.model.ChatRoomUser;
 import com.teamkrews.chat.model.request.ChatRoomCreationRequest;
 import com.teamkrews.chat.model.response.ChatRoomResponse;
 import com.teamkrews.chat.service.ChatRoomService;
-import com.teamkrews.chat.service.ChatRoomUserService;
 import com.teamkrews.utill.ApiResponse;
-import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.model.request.WorkspaceUUIDRequest;
-import com.teamkrews.workspace.repository.WorkspaceRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,25 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/chatRoom")
 @Slf4j
 public class ChatRoomController {
-    private final WorkspaceRepository workspaceRepository;
-    private final UserRepository userRepository;
-
     private final ChatRoomService chatRoomService;
-    private final ChatRoomUserService chatRoomUserService;
 
     // 1:1 채팅방 생성 - 내가 피드백 보낸 경우
     // @RequestBody는 하나의 메서드에 여러 개일 수 없음 -> 따라서, 두 개의 Long 타입 인자로 받으려면 하나의 DTO 안에 넣어줘야 함!
     @PostMapping("/create/chatRoom")
-    public ResponseEntity<ApiResponse<ChatRoomUser>> createChatRoom(@RequestBody ChatRoomCreationRequest request) {
+    public ResponseEntity<ApiResponse<ChatRoom>> createChatRoom(@RequestBody ChatRoomCreationRequest request) {
         try {
             ChatRoom chatRoom = chatRoomService.createChatRoomWithUser(request);
-
-            User user = userRepository.findById(request.getCurrentUserId()).orElseThrow();
-            Workspace workspace = workspaceRepository.findByWorkspaceUUID(request.getWorkspaceUUID()).orElseThrow();
-
-            ChatRoomUser chatRoomUser = chatRoomUserService.createChatRoomUser(user, workspace, chatRoom);
-
-            return ResponseEntity.ok(ApiResponse.success(chatRoomUser));
+            return ResponseEntity.ok(ApiResponse.success(chatRoom));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(null);
         }

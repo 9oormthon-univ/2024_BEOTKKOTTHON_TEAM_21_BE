@@ -39,18 +39,19 @@ public class ChatRoomService {
         ChatRoom chatRoom = new ChatRoom();
         chatRoomRepository.save(chatRoom);
 
-        // chatRoomUser - chatRoom / user 연결
-//        connectUserToChatRoom(chatRoom, currentUser);
-        connectUserToChatRoom(chatRoom, targetUser, workspace);
+        createAndSaveChatRoomUser(chatRoom, currentUser, workspace, 1);
+        createAndSaveChatRoomUser(chatRoom, targetUser, workspace, 0);
+
 
         return chatRoom;
     }
 
-    private void connectUserToChatRoom(ChatRoom chatRoom, User user, Workspace workspace) {
+    private void createAndSaveChatRoomUser(ChatRoom chatRoom, User user, Workspace workspace, int isCreator) {
         ChatRoomUser chatRoomUser = new ChatRoomUser();
         chatRoomUser.setChatRoom(chatRoom);
         chatRoomUser.setUser(user);
         chatRoomUser.setWorkspace(workspace);
+        chatRoomUser.setIsCreator(isCreator);
         chatRoomUserRepository.save(chatRoomUser);
     }
 
