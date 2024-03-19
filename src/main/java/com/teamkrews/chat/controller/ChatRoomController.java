@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -59,11 +58,8 @@ public class ChatRoomController {
     @GetMapping("")
     public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRooms(@AuthenticationPrincipal User user, @RequestBody WorkspaceUUIDRequest workspaceRequest) {
 
-        log.info("aa");
         Long userId = user.getId();
-        log.info(userId.toString());
         String workspaceUUID = workspaceRequest.getWorkspaceUUID();
-        log.info(workspaceUUID);
         List<ChatRoomResponse> chatRoomResponses = chatRoomService.getChatRoomsByUserIdAndWorkspaceUUID(userId, workspaceUUID);
 
         return ResponseEntity.ok(ApiResponse.success(chatRoomResponses));
