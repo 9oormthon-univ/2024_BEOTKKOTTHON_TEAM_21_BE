@@ -33,22 +33,24 @@ public class ChatRoomService {
 
         User currentUser = userRepository.findById(request.getCurrentUserId()).orElseThrow();
         User targetUser = userRepository.findById(request.getTargetUserId()).orElseThrow();
+        Workspace workspace = workspaceRepository.findByWorkspaceUUID(request.getWorkspaceUUID()).orElseThrow();
 
         // 채팅방 생성
         ChatRoom chatRoom = new ChatRoom();
         chatRoomRepository.save(chatRoom);
 
         // chatRoomUser - chatRoom / user 연결
-        connectUserToChatRoom(chatRoom, currentUser);
-        connectUserToChatRoom(chatRoom, targetUser);
+//        connectUserToChatRoom(chatRoom, currentUser);
+        connectUserToChatRoom(chatRoom, targetUser, workspace);
 
         return chatRoom;
     }
 
-    private void connectUserToChatRoom(ChatRoom chatRoom, User user) {
+    private void connectUserToChatRoom(ChatRoom chatRoom, User user, Workspace workspace) {
         ChatRoomUser chatRoomUser = new ChatRoomUser();
         chatRoomUser.setChatRoom(chatRoom);
         chatRoomUser.setUser(user);
+        chatRoomUser.setWorkspace(workspace);
         chatRoomUserRepository.save(chatRoomUser);
     }
 
