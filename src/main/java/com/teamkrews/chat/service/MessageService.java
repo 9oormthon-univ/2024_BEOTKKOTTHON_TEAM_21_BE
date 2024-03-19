@@ -17,7 +17,7 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public List<Message> getMessagesByChatRoom(ChatRoom chatRoom) {
-        return messageRepository.findByChatRoomOrderByCreatedAtAsc(chatRoom);
-    }
+//    public List<Message> getMessagesByChatRoomId(Long chatRoomId) {
+//        return messageRepository.findByChatRoomId(chatRoomId);
+//    }
 }

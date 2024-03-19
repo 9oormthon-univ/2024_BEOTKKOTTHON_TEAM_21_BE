@@ -1,6 +1,7 @@
 package com.teamkrews.chat.model;
 
 import com.teamkrews.User.model.User;
+import com.teamkrews.workspace.model.Workspace;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,10 @@ public class ChatRoomUser {
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Workspace workspace;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
