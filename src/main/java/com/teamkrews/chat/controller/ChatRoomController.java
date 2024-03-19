@@ -45,6 +45,7 @@ public class ChatRoomController {
 
         Long userId = user.getId();
         String workspaceUUID = workspaceRequest.getWorkspaceUUID();
+
         List<ChatRoomResponse> chatRoomResponses = chatRoomService.getChatRoomsByUserIdAndWorkspaceUUID(userId, workspaceUUID);
 
         return ResponseEntity.ok(ApiResponse.success(chatRoomResponses));
