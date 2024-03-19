@@ -24,6 +24,9 @@ public class ChatRoomUser {
     @Column(name = "chat_room_user_id")
     private Long id;
 
+    @Column(name = "is_creator")
+    private int isCreator;
+
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
