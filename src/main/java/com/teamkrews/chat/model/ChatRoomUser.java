@@ -32,10 +32,15 @@ public class ChatRoomUser {
     private ChatRoom chatRoom;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
     @JoinColumn(name = "id")
     private Workspace workspace;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//    // 03-20 추가
+//    @ManyToOne
+//    @JoinColumn(name = "message_id")
+//    private Message message;
 }
