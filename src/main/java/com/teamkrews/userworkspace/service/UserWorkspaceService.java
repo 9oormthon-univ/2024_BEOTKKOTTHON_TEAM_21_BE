@@ -16,6 +16,7 @@ import com.teamkrews.workspace.model.response.WorkspaceInfoResponse;
 import com.teamkrews.workspace.service.WorkspaceService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,7 @@ public class UserWorkspaceService {
     public WorkspaceInfoResponse join(UserWorkspaceJoinDto dto){
         final String workspaceUUID = dto.getWorkspaceUUID();
 
-        Workspace workspace = workspaceService.findByUUID(dto.getWorkspaceUUID());
+        Workspace workspace = workspaceService.findByUUID(workspaceUUID);
         UserWorkspaceCreateDto userWorkspaceCreateDto = new UserWorkspaceCreateDto(dto.getUser(), workspace);
         create(userWorkspaceCreateDto);
 

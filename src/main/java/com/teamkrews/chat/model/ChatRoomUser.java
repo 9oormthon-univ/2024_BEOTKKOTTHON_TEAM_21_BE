@@ -32,10 +32,10 @@ public class ChatRoomUser {
     private ChatRoom chatRoom;
 
     @ManyToOne
-    @JoinColumn(name = "id")
-    private Workspace workspace;
-
-    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "workspace_id")
+    private Workspace workspace;
 }

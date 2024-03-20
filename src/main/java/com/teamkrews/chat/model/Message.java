@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -19,11 +20,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Message {
-
-    public enum MessageType {
-        TEXT, IMAGE
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
@@ -32,15 +28,9 @@ public class Message {
     @Column(name = "sender_id")
     private Long senderId;
 
+    @Column(name = "content")
     private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    private MessageType messageType;
-
 }
