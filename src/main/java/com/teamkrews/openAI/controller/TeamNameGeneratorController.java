@@ -1,6 +1,7 @@
 package com.teamkrews.openAI.controller;
 
 import com.teamkrews.openAI.model.request.SeedWords;
+import com.teamkrews.openAI.model.response.SavedTeamNameResponse;
 import com.teamkrews.openAI.model.response.TeamNames;
 import com.teamkrews.openAI.service.TeamNameGeneratorService;
 import com.teamkrews.utill.ApiResponse;
@@ -30,9 +31,14 @@ public class TeamNameGeneratorController {
     }
 
     @PostMapping("/save/teamName/workspace/{workspaceUUID}")
-    public ResponseEntity<ApiResponse<Workspace>> saveSelectedTeamName(@PathVariable String workspaceUUID, @RequestBody String selectedTeamName) {
+    public ResponseEntity<ApiResponse<SavedTeamNameResponse>> saveSelectedTeamName(@PathVariable String workspaceUUID, @RequestBody String selectedTeamName) {
         Workspace workspace = teamNameGeneratorService.saveTeamName(workspaceUUID, selectedTeamName);
 
-        return ResponseEntity.ok(ApiResponse.success(workspace));
+        SavedTeamNameResponse response = new SavedTeamNameResponse();
+        response.setTeamName(selectedTeamName);
+        response.setExplanation(workspace.getExplanation());
+        response.setWorkspaceId(workspace.getWorkspaceId());
+
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
