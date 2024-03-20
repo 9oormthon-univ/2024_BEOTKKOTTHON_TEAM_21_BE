@@ -50,5 +50,4 @@ public class ChatRoomController {
 
         return ResponseEntity.ok(ApiResponse.success(chatRoomResponses));
     }
-
 }
