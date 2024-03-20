@@ -36,8 +36,8 @@ public class TeamNameGeneratorController {
 
         SavedTeamNameResponse response = new SavedTeamNameResponse();
         response.setTeamName(selectedTeamName);
+        response.setWorkspaceUUID(workspaceUUID);
         response.setExplanation(workspace.getExplanation());
-        response.setWorkspaceId(workspace.getWorkspaceId());
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

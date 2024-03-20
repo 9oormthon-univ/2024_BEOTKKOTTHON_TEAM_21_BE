@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class SavedTeamNameResponse {
 
-    private Long workspaceId;
+    private String workspaceUUID;
 
     private String teamName;
 
