@@ -95,7 +95,7 @@ jobs:
       with:
         host: ${{ secrets.HOST_EC2 }}
         username: ubuntu
-        password: ${{ secrets.PASSWORD }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
           sudo docker rm -f TeamKrews
