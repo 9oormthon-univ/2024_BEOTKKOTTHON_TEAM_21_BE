@@ -1,0 +1,105 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    # gradle caching - 빌드 시간 향상
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    
+    # gradle 빌드
+    - name: Build with Gradle
+      run: |
+          chmod +x ./gradlew
+          ./gradlew build -x test
+
+    # application.yml 파일 생성
+    - name: make application.yml
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources
+        touch ./application.yml
+        echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+      shell: bash
+
+    # application-db.yml 파일 생성
+    - name: make application-db.yml
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources
+        touch ./application-db.yml
+        echo "${{ secrets.APPLICATION_DB_YML }}" > ./application-db.yml
+      shell: bash
+
+    # application-jwt.yml 파일 생성
+    - name: make application-jwt.yml
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources
+        touch ./application-jwt.yml
+        echo "${{ secrets.APPLICATION_JWT_YML }}" > ./application-jwt.yml
+      shell: bash
+
+    # application-openAI.yml 파일 생성
+    - name: make application-openAI.yml
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources
+        touch ./application-openAI.yml
+        echo "${{ secrets.APPLICATION_OPENAI_YML }}" > ./application-openAI.yml
+      shell: bash
+
+    ## docker build & push to production
+    - name: Docker build & push to prod
+      if: contains(github.ref, 'main')
+      run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_REPO }} .
+          docker push ${{ secrets.DOCKER_REPO }}
+    - name: Deploy to prod
+      uses: appleboy/ssh-action@master
+      id: deploy
+      if: contains(github.ref, 'main')
+      with:
+        host: ${{ secrets.HOST_EC2 }}
+        username: ubuntu
+        password: ${{ secrets.PASSWORD }}
+        port: 22
+        script: |
+          sudo docker rm -f TeamKrews
+          sudo docker image rm ${{ secrets.DOCKER_REPO }} -f
+          sudo docker pull ${{ secrets.DOCKER_REPO }}
+          sudo docker run --name TeamKrews --network host -d -v ~/image/:/image/ -p 8080:8080 ${{ secrets.DOCKER_REPO }}
+      
