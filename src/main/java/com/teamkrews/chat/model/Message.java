@@ -25,17 +25,11 @@ public class Message {
     @Column(name = "message_id")
     private Long messageId;
 
-    // 이거 어떻게 user_id랑 묶어주지?
     @Column(name = "sender_id")
     private Long senderId;
 
     @Column(name = "content")
     private String content;
-
-//    // 없어도 되지 않나? ChatRoomUser에서 조인했으니까
-//    @ManyToOne
-//    @JoinColumn(name = "chat_room_id")
-//    private ChatRoom chatRoom;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
