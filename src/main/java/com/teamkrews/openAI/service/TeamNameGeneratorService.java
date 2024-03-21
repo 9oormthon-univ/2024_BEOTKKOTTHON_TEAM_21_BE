@@ -1,18 +1,14 @@
 package com.teamkrews.openAI.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamkrews.openAI.model.request.SeedWords;
-import com.teamkrews.openAI.model.response.TeamNames;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.repository.WorkspaceRepository;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
