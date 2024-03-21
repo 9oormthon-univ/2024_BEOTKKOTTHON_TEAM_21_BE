@@ -1,7 +1,8 @@
 package com.teamkrews.auth.controller;
 
-import com.teamkrews.auth.exception.EmptyAuthorizationHeaderException;
 import com.teamkrews.auth.exception.InvalidTokenException;
+import com.teamkrews.global.exception.CustomException;
+import com.teamkrews.global.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 
@@ -15,7 +16,7 @@ public class AuthorizationExtractor {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (Objects.isNull(authorizationHeader)) {
-            throw new EmptyAuthorizationHeaderException();
+            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
         }
 
         validateAuthorizationFormat(authorizationHeader);

@@ -13,12 +13,11 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
+        // 클라이언트에서 보낸 메세지를 받을 prefix
+        config.setApplicationDestinationPrefixes("/send");
 
-        // sub 접두사가 있는 주제를 구독하는 클라이언트들에게 메시지 전송
-        config.enableSimpleBroker("/sub");
-
-        // 클라이언트가 메시지 발행 시 사용할 접두사 설정
-        config.setApplicationDestinationPrefixes("/pub");
+        // 구독하는 클라이언트들에게 메시지 전송
+        config.enableSimpleBroker("/chatRoom");
     }
 
     @Override

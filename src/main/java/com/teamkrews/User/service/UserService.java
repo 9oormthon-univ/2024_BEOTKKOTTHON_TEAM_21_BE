@@ -7,6 +7,9 @@ import com.teamkrews.User.repository.UserRepository;
 import com.teamkrews.chat.model.ChatRoom;
 import com.teamkrews.chat.repository.ChatRoomRepository;
 import java.util.List;
+
+import com.teamkrews.global.exception.CustomException;
+import com.teamkrews.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,7 @@ public class UserService {
 
         return user.orElseThrow(() -> {
             log.info("id = {} 인 사용자가 존재하지 않습니다", id);
-            return new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+            return new CustomException(ErrorCode.USER_NOT_FOUND);
         });
     }
 }
