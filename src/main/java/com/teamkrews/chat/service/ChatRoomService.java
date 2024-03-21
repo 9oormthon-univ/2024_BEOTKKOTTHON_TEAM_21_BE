@@ -35,6 +35,17 @@ public class ChatRoomService {
     private final ChatRoomUserRepository chatRoomUserRepository;
     private final WorkspaceService workspaceService;
 
+    public ChatRoom findById(final Long chatRoomId){
+        Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(chatRoomId);
+
+        if(chatRoomOptional.isEmpty()){
+            throw new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND);
+        }
+
+        return chatRoomOptional.get();
+    }
+
+
     // 1:1 채팅방 생성
     @Transactional
     public ChatRoomResponse createChatRoomWithUser(ChatRoomCreationDto dto) {
@@ -95,16 +106,6 @@ public class ChatRoomService {
                     return response;
                 })
                 .collect(Collectors.toList());
-    }
-
-    public ChatRoom findById(final Long chatRoomId){
-        Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(chatRoomId);
-
-        if(chatRoomOptional.isEmpty()){
-            throw new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND);
-        }
-
-        return chatRoomOptional.get();
     }
 
     // 내가 보낸 채팅방 조회

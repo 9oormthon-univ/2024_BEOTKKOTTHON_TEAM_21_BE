@@ -5,6 +5,8 @@ import com.teamkrews.auth.controller.AuthenticationPrincipal;
 import com.teamkrews.chat.model.ChatRoom;
 import com.teamkrews.chat.model.ChatRoomUser;
 import com.teamkrews.chat.model.Message;
+import com.teamkrews.chat.model.request.MessageDTO;
+import com.teamkrews.chat.model.response.MessageResponse;
 import com.teamkrews.chat.repository.ChatRoomUserRepository;
 import com.teamkrews.chat.service.ChatRoomService;
 import com.teamkrews.chat.service.MessageService;
@@ -14,6 +16,7 @@ import com.teamkrews.utill.ApiResponse;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -39,6 +42,7 @@ public class MessageController {
     private final ChatRoomUserRepository chatRoomUserRepository;
     private final WorkspaceService workspaceService;
     private final MessageTranslatorService messageTranslatorService;
+    private final ModelMapper modelMapper;
 
     // 특정 채팅방의 메시지 불러오기
     @GetMapping("/list")
@@ -61,18 +65,17 @@ public class MessageController {
     }
 
     // 메시지 전송 및 저장
-    @MessageMapping("/{chatRoomId}") // /pub/message/{chatRoomId}로 날린 데이터에 대해 /sub/message/chatRoom/{chatRoomId} 구독자들에게 메시지 전송
-    @SendTo("/chatRoom/{chatRoomId}")
-    public Message sendAndSaveMessage(@DestinationVariable Long chatRoomId, @Payload Message message) {
+    @MessageMapping("/{chatRoomId}") // /pub/message/{chatRoomId}로 날린 데이터에 대해 /sub/message/{chatRoomId} 구독자들에게 메시지 전송
+    @SendTo("/room/{chatRoomId}")
+    public MessageResponse sendAndSaveMessage(@DestinationVariable Long chatRoomId, @Payload MessageDTO messageDTO) {
         // 메시지 말투 변환
-        String transformedMessage = messageTranslatorService.transformMessage(message);
-        message.setContent(transformedMessage);
+        String transformedMessage = messageTranslatorService.transformMessage(messageDTO);
+        messageDTO.setContent(transformedMessage);
 
         // 메시지 저장
-        ChatRoom chatRoom = chatRoomService.findById(chatRoomId);
-        messageService.saveMessage(chatRoom, message);
+        Message message = messageService.saveMessage(chatRoomId, messageDTO);
 
-        return message;
+        return modelMapper.map(message, MessageResponse.class);
     }
 
     // 말투 변환 테스트

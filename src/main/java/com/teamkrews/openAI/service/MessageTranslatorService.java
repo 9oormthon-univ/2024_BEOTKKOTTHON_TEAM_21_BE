@@ -1,6 +1,7 @@
 package com.teamkrews.openAI.service;
 
 import com.teamkrews.chat.model.Message;
+import com.teamkrews.chat.model.request.MessageDTO;
 import com.teamkrews.openAI.model.request.MessageTranslatorDTO;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +25,9 @@ public class MessageTranslatorService {
     private final HttpHeaders httpHeaders;
 
     // 말투 변환
-    public String transformMessage(Message message) {
+    public String transformMessage(MessageDTO messageDTO) {
 
-        final String content = message.getContent();
+        final String content = messageDTO.getContent();
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", "gpt-3.5-turbo");
