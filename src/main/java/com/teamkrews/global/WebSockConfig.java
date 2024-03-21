@@ -14,10 +14,10 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // 클라이언트에서 보낸 메세지를 받을 prefix
-        config.setApplicationDestinationPrefixes("/send");
+        config.setApplicationDestinationPrefixes("/pub");
 
         // 구독하는 클라이언트들에게 메시지 전송
-        config.enableSimpleBroker("/chatRoom");
+        config.enableSimpleBroker("/sub");
     }
 
     @Override
@@ -25,7 +25,7 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
         // stomp 웹소켓 endpoint 설정
         // ws://localhost:8080/ws
-        // http://localhost
+        // http://배포주소:8080/ws
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
