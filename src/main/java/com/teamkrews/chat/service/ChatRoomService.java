@@ -40,12 +40,17 @@ public class ChatRoomService {
     public ChatRoomResponse createChatRoomWithUser(ChatRoomCreationDto dto) {
         Long creatorUserId = dto.getCreatorUserId();
         List<Long> userIds = dto.getUserIds();
+
         userIds.add(creatorUserId);
+        HashSet<Long> userIdsSet = new HashSet<>(userIds);
 
         Workspace workspace = workspaceService.findByUUID(dto.getWorkspaceUUID());
-        ChatRoom chatRoom = chatRoomRepository.save(new ChatRoom());
 
-        HashSet<Long> userIdsSet = new HashSet<>(userIds);
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setUserCnt(Long.valueOf(userIdsSet.size()));
+
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+
         userIdsSet.stream().forEach((id)->{
             User user = userService.getById(id);
             int isCreator = 0;
@@ -53,7 +58,7 @@ public class ChatRoomService {
             if(id == creatorUserId)
                 isCreator = 1;
 
-            createAndSaveChatRoomUser(chatRoom, user, workspace, isCreator);
+            createAndSaveChatRoomUser(savedChatRoom, user, workspace, isCreator);
         });
 
         ChatRoomResponse chatRoomResponse = new ChatRoomResponse();

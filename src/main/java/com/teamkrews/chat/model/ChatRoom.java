@@ -19,4 +19,6 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_room_id")
     private Long chatRoomId;
+
+    private Long userCnt;
 }
