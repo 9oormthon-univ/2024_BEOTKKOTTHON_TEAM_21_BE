@@ -36,7 +36,7 @@ public class MessageTranslatorService {
         requestBody.put("messages", new Object[] {
                 new HashMap<String, String>() {{
                     put("role", "system");
-                    put("content", "content를 '~용' 으로 말투를 바꿔줘.");
+                    put("content", "content를 '~용' 으로 말투를 바꿔줘. 의문문에도 해당이야.");
                 }},
                 new HashMap<String, String>() {{
                     put("role", "user");
