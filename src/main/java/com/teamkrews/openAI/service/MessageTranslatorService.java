@@ -61,7 +61,7 @@ public class MessageTranslatorService {
 
             return message.getString("content");
         }
-        return "No content found";
+        return "content 문자열을 찾을 수 없습니다.";
     }
 
     // 테스트용
