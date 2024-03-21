@@ -1,5 +1,7 @@
 package com.teamkrews.openAI.controller;
 
+import com.teamkrews.User.model.User;
+import com.teamkrews.auth.controller.AuthenticationPrincipal;
 import com.teamkrews.openAI.model.request.SeedWords;
 import com.teamkrews.openAI.model.response.SavedTeamNameResponse;
 import com.teamkrews.openAI.model.response.TeamNames;
@@ -21,7 +23,7 @@ public class TeamNameGeneratorController {
     private final TeamNameGeneratorService teamNameGeneratorService;
 
     @PostMapping("/generate/teamNames")
-    public ResponseEntity<ApiResponse<TeamNames>> generateTeamName(@RequestBody SeedWords request) {
+    public ResponseEntity<ApiResponse<TeamNames>> generateTeamName(@AuthenticationPrincipal User user, @RequestBody SeedWords request) {
         List<String> teamNamesList = teamNameGeneratorService.generateTeamName(request);
 
         TeamNames teamNames = new TeamNames();
@@ -31,7 +33,7 @@ public class TeamNameGeneratorController {
     }
 
     @PostMapping("/save/teamName/workspace/{workspaceUUID}")
-    public ResponseEntity<ApiResponse<SavedTeamNameResponse>> saveSelectedTeamName(@PathVariable String workspaceUUID, @RequestBody String selectedTeamName) {
+    public ResponseEntity<ApiResponse<SavedTeamNameResponse>> saveSelectedTeamName(@AuthenticationPrincipal User user, @PathVariable String workspaceUUID, @RequestBody String selectedTeamName) {
         Workspace workspace = teamNameGeneratorService.saveTeamName(workspaceUUID, selectedTeamName);
 
         SavedTeamNameResponse response = new SavedTeamNameResponse();
