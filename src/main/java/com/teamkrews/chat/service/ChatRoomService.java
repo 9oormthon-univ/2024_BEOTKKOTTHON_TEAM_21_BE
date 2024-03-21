@@ -55,7 +55,7 @@ public class ChatRoomService {
         chatRoomUserRepository.save(chatRoomUser);
     }
 
-    // 채팅방 조회
+    // 전체 채팅방 조회
     public List<ChatRoomResponse> getChatRoomsByUserIdAndWorkspaceUUID(Long userId, String workspaceUUID) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -65,6 +65,42 @@ public class ChatRoomService {
         List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspace(user, workspace);
 
         // 조회된 채팅방 목록을 ChatRoomResponse 리스트로 변환
+        return chatRoomUsers.stream()
+                .map(chatRoomUser -> {
+                    ChatRoomResponse response = new ChatRoomResponse();
+                    response.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
+                    response.setWorkspaceUUID(chatRoomUser.getWorkspace().getWorkspaceUUID());
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 내가 보낸 채팅방 조회
+    public List<ChatRoomResponse> getChatRoomsOfSent(Long userId, String workspaceUUID) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Workspace workspace = workspaceRepository.findByWorkspaceUUID(workspaceUUID).orElseThrow(() -> new RuntimeException("워크스페이스를 찾을 수 없습니다."));
+
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 1);
+
+        return chatRoomUsers.stream()
+                .map(chatRoomUser -> {
+                    ChatRoomResponse response = new ChatRoomResponse();
+                    response.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
+                    response.setWorkspaceUUID(chatRoomUser.getWorkspace().getWorkspaceUUID());
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 내가 받은 채팅방 조회
+    public List<ChatRoomResponse> getChatRoomsOfReceived(Long userId, String workspaceUUID) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Workspace workspace = workspaceRepository.findByWorkspaceUUID(workspaceUUID).orElseThrow(() -> new RuntimeException("워크스페이스를 찾을 수 없습니다."));
+
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 0);
+
         return chatRoomUsers.stream()
                 .map(chatRoomUser -> {
                     ChatRoomResponse response = new ChatRoomResponse();
