@@ -25,14 +25,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 public class ChatRoomService {
+
     private final UserService userService;
-    private final WorkspaceService workspaceService;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomUserRepository chatRoomUserRepository;
+    private final WorkspaceService workspaceService;
 
     // 1:1 채팅방 생성
     @Transactional
     public ChatRoom createChatRoomWithUser(ChatRoomCreationRequest request) {
+
         User currentUser = userService.getById(request.getCurrentUserId());
         User targetUser = userService.getById(request.getTargetUserId());
         Workspace workspace = workspaceService.findByUUID(request.getWorkspaceUUID());
@@ -58,6 +60,7 @@ public class ChatRoomService {
 
     // 채팅방 조회
     public List<ChatRoomResponse> getChatRoomsByUserIdAndWorkspaceUUID(Long userId, String workspaceUUID) {
+
         User user = userService.getById(userId);
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
 
@@ -83,5 +86,39 @@ public class ChatRoomService {
         }
 
         return chatRoomOptional.get();
+    }
+
+    // 내가 보낸 채팅방 조회
+    public List<ChatRoomResponse> getChatRoomsOfSent(Long userId, String workspaceUUID) {
+        User user = userService.getById(userId);
+        Workspace workspace = workspaceService.findByUUID(workspaceUUID);
+
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 1);
+
+        return chatRoomUsers.stream()
+                .map(chatRoomUser -> {
+                    ChatRoomResponse response = new ChatRoomResponse();
+                    response.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
+                    response.setWorkspaceUUID(chatRoomUser.getWorkspace().getWorkspaceUUID());
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 내가 받은 채팅방 조회
+    public List<ChatRoomResponse> getChatRoomsOfReceived(Long userId, String workspaceUUID) {
+        User user = userService.getById(userId);
+        Workspace workspace = workspaceService.findByUUID(workspaceUUID);
+
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 0);
+
+        return chatRoomUsers.stream()
+                .map(chatRoomUser -> {
+                    ChatRoomResponse response = new ChatRoomResponse();
+                    response.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
+                    response.setWorkspaceUUID(chatRoomUser.getWorkspace().getWorkspaceUUID());
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 }
