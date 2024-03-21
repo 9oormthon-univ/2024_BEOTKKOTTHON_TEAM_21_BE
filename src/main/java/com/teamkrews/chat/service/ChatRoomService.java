@@ -2,6 +2,7 @@ package com.teamkrews.chat.service;
 
 import com.teamkrews.User.service.UserService;
 import com.teamkrews.chat.model.ChatRoom;
+import com.teamkrews.chat.model.ChatRoomCreationDto;
 import com.teamkrews.chat.model.ChatRoomUser;
 import com.teamkrews.User.model.User;
 import com.teamkrews.chat.model.request.ChatRoomCreationRequest;
@@ -11,6 +12,8 @@ import com.teamkrews.chat.repository.ChatRoomUserRepository;
 import com.teamkrews.global.exception.CustomException;
 import com.teamkrews.global.exception.ErrorCode;
 import com.teamkrews.workspace.model.Workspace;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 import com.teamkrews.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.type.TrueFalseConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,20 +37,35 @@ public class ChatRoomService {
 
     // 1:1 채팅방 생성
     @Transactional
-    public ChatRoom createChatRoomWithUser(ChatRoomCreationRequest request) {
+    public ChatRoomResponse createChatRoomWithUser(ChatRoomCreationDto dto) {
+        Long creatorUserId = dto.getCreatorUserId();
+        List<Long> userIds = dto.getUserIds();
 
-        User currentUser = userService.getById(request.getCurrentUserId());
-        User targetUser = userService.getById(request.getTargetUserId());
-        Workspace workspace = workspaceService.findByUUID(request.getWorkspaceUUID());
+        userIds.add(creatorUserId);
+        HashSet<Long> userIdsSet = new HashSet<>(userIds);
 
-        // 채팅방 생성
+        Workspace workspace = workspaceService.findByUUID(dto.getWorkspaceUUID());
+
         ChatRoom chatRoom = new ChatRoom();
-        chatRoomRepository.save(chatRoom);
+        chatRoom.setUserCnt(Long.valueOf(userIdsSet.size()));
 
-        createAndSaveChatRoomUser(chatRoom, currentUser, workspace, 1);
-        createAndSaveChatRoomUser(chatRoom, targetUser, workspace, 0);
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
-        return chatRoom;
+        userIdsSet.stream().forEach((id)->{
+            User user = userService.getById(id);
+            int isCreator = 0;
+
+            if(id == creatorUserId)
+                isCreator = 1;
+
+            createAndSaveChatRoomUser(savedChatRoom, user, workspace, isCreator);
+        });
+
+        ChatRoomResponse chatRoomResponse = new ChatRoomResponse();
+        chatRoomResponse.setChatRoomId(chatRoom.getChatRoomId());
+        chatRoomResponse.setWorkspaceUUID(dto.getWorkspaceUUID());
+
+        return chatRoomResponse;
     }
 
     private void createAndSaveChatRoomUser(ChatRoom chatRoom, User user, Workspace workspace, int isCreator) {

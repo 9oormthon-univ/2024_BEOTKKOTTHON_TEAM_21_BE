@@ -3,10 +3,11 @@ package com.teamkrews.chat.model.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ChatRoomCreationRequest {
     private String workspaceUUID;
-    private Long currentUserId;
-    private Long targetUserId;
+    private List<Long> userIds;
 }

@@ -3,6 +3,7 @@ package com.teamkrews.chat.controller;
 import com.teamkrews.User.model.User;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
 import com.teamkrews.chat.model.ChatRoom;
+import com.teamkrews.chat.model.ChatRoomCreationDto;
 import com.teamkrews.chat.model.request.ChatRoomCreationRequest;
 import com.teamkrews.chat.model.response.ChatRoomResponse;
 import com.teamkrews.chat.service.ChatRoomService;
@@ -31,14 +32,13 @@ public class ChatRoomController {
     // 1:1 채팅방 생성 - 내가 피드백 보낸 경우
     // @RequestBody는 하나의 메서드에 여러 개일 수 없음 -> 따라서, 두 개의 Long 타입 인자로 받으려면 하나의 DTO 안에 넣어줘야 함!
     @PostMapping("")
-    public ResponseEntity<ApiResponse<ChatRoom>> createChatRoom(@AuthenticationPrincipal User user,
+    public ResponseEntity<ApiResponse<ChatRoomResponse>> createChatRoom(@AuthenticationPrincipal User user,
                                                                 @RequestBody ChatRoomCreationRequest request) {
-        try {
-            ChatRoom chatRoom = chatRoomService.createChatRoomWithUser(request);
-            return ResponseEntity.ok(ApiResponse.success(chatRoom));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        ChatRoomCreationDto dto = mapper.map(request, ChatRoomCreationDto.class);
+        dto.setCreatorUserId(user.getId());
+
+        ChatRoomResponse response = chatRoomService.createChatRoomWithUser(dto);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     // 전체 채팅방 목록 조회
