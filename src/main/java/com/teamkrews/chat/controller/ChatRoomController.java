@@ -11,6 +11,7 @@ import com.teamkrews.workspace.model.request.WorkspaceUUIDRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
+    private final ModelMapper mapper;
 
     // 1:1 채팅방 생성 - 내가 피드백 보낸 경우
     // @RequestBody는 하나의 메서드에 여러 개일 수 없음 -> 따라서, 두 개의 Long 타입 인자로 받으려면 하나의 DTO 안에 넣어줘야 함!
-    @PostMapping("/create/chatRoom")
+    @PostMapping("")
     public ResponseEntity<ApiResponse<ChatRoom>> createChatRoom(@RequestBody ChatRoomCreationRequest request) {
         try {
             ChatRoom chatRoom = chatRoomService.createChatRoomWithUser(request);
