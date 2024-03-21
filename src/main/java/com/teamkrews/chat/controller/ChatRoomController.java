@@ -31,7 +31,8 @@ public class ChatRoomController {
     // 1:1 채팅방 생성 - 내가 피드백 보낸 경우
     // @RequestBody는 하나의 메서드에 여러 개일 수 없음 -> 따라서, 두 개의 Long 타입 인자로 받으려면 하나의 DTO 안에 넣어줘야 함!
     @PostMapping("")
-    public ResponseEntity<ApiResponse<ChatRoom>> createChatRoom(@RequestBody ChatRoomCreationRequest request) {
+    public ResponseEntity<ApiResponse<ChatRoom>> createChatRoom(@AuthenticationPrincipal User user,
+                                                                @RequestBody ChatRoomCreationRequest request) {
         try {
             ChatRoom chatRoom = chatRoomService.createChatRoomWithUser(request);
             return ResponseEntity.ok(ApiResponse.success(chatRoom));
