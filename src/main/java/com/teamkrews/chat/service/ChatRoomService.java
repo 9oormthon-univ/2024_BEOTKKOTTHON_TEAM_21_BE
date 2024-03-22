@@ -103,35 +103,43 @@ public class ChatRoomService {
 
             List<ChatRoomUser> chatRoomUsersReceived = chatRoomUserRepository.findByChatRoomAndIsCreator(chatRoom, 0);
 
-            for (ChatRoomUser userReceived : chatRoomUsersReceived) {
-                ChatRoomDetailResponse chatRoomDetailResponse = new ChatRoomDetailResponse();
-                chatRoomDetailResponse.setChatRoomId(chatRoom.getChatRoomId());
-
-                UserInfoResponse userInfoResponse = new UserInfoResponse();
-                userInfoResponse.setNickName(userReceived.getUser().getNickName());
-                userInfoResponse.setProfileImageUrl(userReceived.getUser().getProfileImageUrl());
-
-                chatRoomDetailResponse.setTargetUser(userInfoResponse);
-
-                chatRoomDetails.add(chatRoomDetailResponse);
-            }
+            parseForResponse(chatRoomDetails, chatRoom, chatRoomUsersReceived);
         }
 
         return chatRoomDetails;
     }
 
     // 내가 받은 채팅방 조회
-    public List<ChatRoom> getChatRoomsOfReceived(User user, String workspaceUUID) {
-        Workspace workspace = workspaceService.findByUUID(workspaceUUID);
+    public List<ChatRoomDetailResponse> getChatRoomsOfReceived(User user, String workspaceUUID) {
 
+        Workspace workspace = workspaceService.findByUUID(workspaceUUID);
         List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 0);
 
-        List<ChatRoom> chatRooms = new ArrayList<>();
-
+        List<ChatRoomDetailResponse> chatRoomDetails = new ArrayList<>();
         for (ChatRoomUser chatRoomUser : chatRoomUsers) {
-            chatRooms.add(chatRoomUser.getChatRoom());
+            ChatRoom chatRoom = chatRoomUser.getChatRoom();
+
+            List<ChatRoomUser> chatRoomUsersSent = chatRoomUserRepository.findByChatRoomAndIsCreator(chatRoom, 1);
+
+            parseForResponse(chatRoomDetails, chatRoom, chatRoomUsersSent);
         }
 
-        return chatRooms;
+        return chatRoomDetails;
+    }
+
+    private void parseForResponse(List<ChatRoomDetailResponse> chatRoomDetails, ChatRoom chatRoom,
+                                  List<ChatRoomUser> chatRoomUsersSent) {
+        for (ChatRoomUser userSent : chatRoomUsersSent) {
+            ChatRoomDetailResponse chatRoomDetailResponse = new ChatRoomDetailResponse();
+            chatRoomDetailResponse.setChatRoomId(chatRoom.getChatRoomId());
+
+            UserInfoResponse userInfoResponse = new UserInfoResponse();
+            userInfoResponse.setNickName(userSent.getUser().getNickName());
+            userInfoResponse.setProfileImageUrl(userSent.getUser().getProfileImageUrl());
+
+            chatRoomDetailResponse.setTargetUser(userInfoResponse);
+
+            chatRoomDetails.add(chatRoomDetailResponse);
+        }
     }
 }

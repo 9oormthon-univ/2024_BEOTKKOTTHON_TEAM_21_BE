@@ -53,9 +53,9 @@ public class ChatRoomController {
 
     // 내가 받은 채팅방 목록 조회
     @GetMapping("/received")
-    public ResponseEntity<ApiResponse<List<ChatRoom>>> getChatRoomsOfReceived(@AuthenticationPrincipal User user, @RequestParam String workspaceUUID) {
-        List<ChatRoom> chatRooms = chatRoomService.getChatRoomsOfReceived(user, workspaceUUID);
+    public ResponseEntity<ApiResponse<List<ChatRoomDetailResponse>>> getChatRoomsOfReceived(@AuthenticationPrincipal User user, @RequestParam String workspaceUUID) {
+        List<ChatRoomDetailResponse> chatRoomDetailResponse = chatRoomService.getChatRoomsOfReceived(user, workspaceUUID);
 
-        return ResponseEntity.ok(ApiResponse.success(chatRooms));
+        return ResponseEntity.ok(ApiResponse.success(chatRoomDetailResponse));
     }
 }
