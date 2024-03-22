@@ -34,6 +34,15 @@ public class UserService {
         });
     }
 
+    public Boolean isDuplicatedLoginId(String loginId){
+        Optional<User> userOptional = userRepository.findByLoginId(loginId);
+
+        if (userOptional.isEmpty()) return Boolean.FALSE;
+
+        return Boolean.TRUE;
+    }
+
+
     @Transactional
     public User update(UserInfoUpdateDto dto) {
         User user = getById(dto.getUserId());

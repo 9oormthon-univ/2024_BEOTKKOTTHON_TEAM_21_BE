@@ -1,6 +1,8 @@
 package com.teamkrews.auth.controller;
 
 
+import com.teamkrews.User.service.UserService;
+import com.teamkrews.auth.model.request.CheckLoginIdDto;
 import com.teamkrews.auth.model.request.SignInDto;
 import com.teamkrews.auth.model.request.SignUpDto;
 import com.teamkrews.auth.model.response.AuthDto;
@@ -19,10 +21,17 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthController {
     private final AuthService authService;
+    private final UserService userService;
 
     @GetMapping("/healthCheck")
     public String healthCheck(){
         return "Connect !";
+    }
+
+    @PostMapping("/check-duplicate")
+    public ResponseEntity<ApiResponse<Boolean>>  checkLoginId(@RequestBody CheckLoginIdDto checkLoginIdDto){
+        Boolean duplicatedLoginId = userService.isDuplicatedLoginId(checkLoginIdDto.getLoginId());
+        return ResponseEntity.ok(ApiResponse.success(duplicatedLoginId));
     }
 
     @PostMapping("/signUp")
