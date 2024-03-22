@@ -16,6 +16,7 @@ import com.teamkrews.utill.ApiResponse;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -35,6 +36,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/message")
+@Slf4j
 public class MessageController {
 
     private final MessageService messageService;
@@ -65,10 +67,12 @@ public class MessageController {
     }
 
     // 메시지 전송 및 저장
-    @MessageMapping("/{chatRoomId}") // /pub/message/{chatRoomId}로 날린 데이터에 대해 /sub/message/{chatRoomId} 구독자들에게 메시지 전송
-    @SendTo("/room/{chatRoomId}")
+    @MessageMapping("/message/{chatRoomId}") // /pub/message/{chatRoomId}로 날린 데이터에 대해 /sub/message/{chatRoomId} 구독자들에게 메시지 전송
+    @SendTo("/message/room/{chatRoomId}")
     public MessageResponse sendAndSaveMessage(@DestinationVariable Long chatRoomId, @Payload MessageDTO messageDTO) {
         // 메시지 말투 변환
+
+        log.info("Message Catch !!");
         String transformedMessage = messageTranslatorService.transformMessage(messageDTO);
         messageDTO.setContent(transformedMessage);
 
