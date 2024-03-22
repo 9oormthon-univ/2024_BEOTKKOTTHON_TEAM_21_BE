@@ -46,7 +46,12 @@ public class UserService {
     @Transactional
     public User update(UserInfoUpdateDto dto) {
         User user = getById(dto.getUserId());
-        user.setNickName(dto.getNickName());
+
+        if(dto.getNickName() != null)
+            user.setNickName(dto.getNickName());
+        if(dto.getProfileImageUrl() != null)
+            user.setProfileImageUrl(dto.getProfileImageUrl());
+
         return user;
     }
 }

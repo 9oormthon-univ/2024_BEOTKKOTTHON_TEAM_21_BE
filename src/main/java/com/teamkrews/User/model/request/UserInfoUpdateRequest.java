@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserInfoUpdateRequest {
-    @NotNull
     private String nickName;
+    private String profileImageUrl;
 }
