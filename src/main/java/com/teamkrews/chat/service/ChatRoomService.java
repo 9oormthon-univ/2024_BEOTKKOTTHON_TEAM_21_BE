@@ -90,9 +90,7 @@ public class ChatRoomService {
     }
 
     // 채팅방 조회
-    public List<ChatRoomResponse> getChatRoomsByUserIdAndWorkspaceUUID(Long userId, String workspaceUUID) {
-
-        User user = userService.getById(userId);
+    public List<ChatRoomResponse> getChatRoomsByUserAndWorkspaceUUID(User user, String workspaceUUID) {
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
 
         // chatRoomRepository를 사용하여 채팅방 목록 조회
@@ -125,8 +123,7 @@ public class ChatRoomService {
     }
 
     // 내가 받은 채팅방 조회
-    public List<ChatRoomResponse> getChatRoomsOfReceived(Long userId, String workspaceUUID) {
-        User user = userService.getById(userId);
+    public List<ChatRoomResponse> getChatRoomsOfReceived(User user, String workspaceUUID) {
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
 
         List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 0);
