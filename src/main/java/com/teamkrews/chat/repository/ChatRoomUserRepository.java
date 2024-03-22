@@ -17,4 +17,6 @@ public interface ChatRoomUserRepository extends JpaRepository<ChatRoomUser, Long
     Optional<ChatRoomUser> findByUserAndWorkspaceAndChatRoom(User user, Workspace workspace, ChatRoom chatRoom);
 
     List<ChatRoomUser> findByUserAndWorkspaceAndIsCreator(User user, Workspace workspace, int isCreator);
+
+    List<ChatRoomUser> findByChatRoomAndIsCreator(ChatRoom chatRoom, int isCreator);
 }
