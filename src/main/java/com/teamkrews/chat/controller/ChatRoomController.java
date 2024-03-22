@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -44,7 +45,7 @@ public class ChatRoomController {
     // 전체 채팅방 목록 조회
     // 나중에 내가 먼저 보낸 채팅방 & 받은 채팅방으로 분리하기
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRooms(@AuthenticationPrincipal User user, @RequestBody WorkspaceUUIDRequest workspaceRequest) {
+    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRooms(@AuthenticationPrincipal User user, @RequestParam WorkspaceUUIDRequest workspaceRequest) {
 
         Long userId = user.getId();
         String workspaceUUID = workspaceRequest.getWorkspaceUUID();
@@ -56,7 +57,7 @@ public class ChatRoomController {
 
     // 내가 보낸 채팅방 목록 조회
     @GetMapping("/sent")
-    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRoomsOfSent(@AuthenticationPrincipal User user, @RequestBody WorkspaceUUIDRequest workspaceRequest) {
+    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRoomsOfSent(@AuthenticationPrincipal User user, @RequestParam WorkspaceUUIDRequest workspaceRequest) {
 
         Long userId = user.getId();
         String workspaceUUID = workspaceRequest.getWorkspaceUUID();
@@ -68,7 +69,7 @@ public class ChatRoomController {
 
     // 내가 받은 채팅방 목록 조회
     @GetMapping("/received")
-    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRoomsOfReceived(@AuthenticationPrincipal User user, @RequestBody WorkspaceUUIDRequest workspaceRequest) {
+    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRoomsOfReceived(@AuthenticationPrincipal User user, @RequestParam WorkspaceUUIDRequest workspaceRequest) {
 
         Long userId = user.getId();
         String workspaceUUID = workspaceRequest.getWorkspaceUUID();
