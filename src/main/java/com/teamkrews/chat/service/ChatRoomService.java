@@ -1,12 +1,15 @@
 package com.teamkrews.chat.service;
 
+import com.teamkrews.User.repository.UserRepository;
 import com.teamkrews.User.service.UserService;
 import com.teamkrews.chat.model.ChatRoom;
 import com.teamkrews.chat.model.ChatRoomCreationDto;
 import com.teamkrews.chat.model.ChatRoomUser;
 import com.teamkrews.User.model.User;
-import com.teamkrews.chat.model.request.ChatRoomCreationRequest;
+import com.teamkrews.chat.model.response.ChatRoomDetailResponse;
+import com.teamkrews.chat.model.response.ChatRoomListResponse;
 import com.teamkrews.chat.model.response.ChatRoomResponse;
+import com.teamkrews.chat.model.response.UserInfoResponse;
 import com.teamkrews.chat.repository.ChatRoomRepository;
 import com.teamkrews.chat.repository.ChatRoomUserRepository;
 import com.teamkrews.global.exception.CustomException;
@@ -17,12 +20,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.teamkrews.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.type.TrueFalseConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 public class ChatRoomService {
+    private final UserRepository userRepository;
 
     private final UserService userService;
     private final ChatRoomRepository chatRoomRepository;
@@ -89,29 +91,40 @@ public class ChatRoomService {
         chatRoomUserRepository.save(chatRoomUser);
     }
 
-    // 채팅방 조회
-    public List<ChatRoomResponse> getChatRoomsByUserAndWorkspaceUUID(User user, String workspaceUUID) {
+    // 내가 보낸 채팅방 조회
+    public List<ChatRoomDetailResponse> getChatRoomsOfSent(User user, String workspaceUUID) {
+
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 1);
 
-        // chatRoomRepository를 사용하여 채팅방 목록 조회
-        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspace(user, workspace);
+        List<ChatRoomDetailResponse> chatRoomDetails = new ArrayList<>();
+        for (ChatRoomUser chatRoomUser : chatRoomUsers) {
+            ChatRoom chatRoom = chatRoomUser.getChatRoom();
 
-        // 조회된 채팅방 목록을 ChatRoomResponse 리스트로 변환
-        return chatRoomUsers.stream()
-                .map(chatRoomUser -> {
-                    ChatRoomResponse response = new ChatRoomResponse();
-                    response.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
-                    response.setWorkspaceUUID(chatRoomUser.getWorkspace().getWorkspaceUUID());
-                    return response;
-                })
-                .collect(Collectors.toList());
+            List<ChatRoomUser> chatRoomUsersReceived = chatRoomUserRepository.findByChatRoomAndIsCreator(chatRoom, 0);
+
+            for (ChatRoomUser userReceived : chatRoomUsersReceived) {
+                ChatRoomDetailResponse chatRoomDetailResponse = new ChatRoomDetailResponse();
+                chatRoomDetailResponse.setChatRoomId(chatRoom.getChatRoomId());
+
+                UserInfoResponse userInfoResponse = new UserInfoResponse();
+                userInfoResponse.setNickName(userReceived.getUser().getNickName());
+                userInfoResponse.setProfileImageUrl(userReceived.getUser().getProfileImageUrl());
+
+                chatRoomDetailResponse.setTargetUser(userInfoResponse);
+
+                chatRoomDetails.add(chatRoomDetailResponse);
+            }
+        }
+
+        return chatRoomDetails;
     }
 
-    // 내가 보낸 채팅방 조회
-    public List<ChatRoom> getChatRoomsOfSent(User user, String workspaceUUID) {
+    // 내가 받은 채팅방 조회
+    public List<ChatRoom> getChatRoomsOfReceived(User user, String workspaceUUID) {
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
 
-        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 1);
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 0);
 
         List<ChatRoom> chatRooms = new ArrayList<>();
 
@@ -120,21 +133,5 @@ public class ChatRoomService {
         }
 
         return chatRooms;
-    }
-
-    // 내가 받은 채팅방 조회
-    public List<ChatRoomResponse> getChatRoomsOfReceived(User user, String workspaceUUID) {
-        Workspace workspace = workspaceService.findByUUID(workspaceUUID);
-
-        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 0);
-
-        return chatRoomUsers.stream()
-                .map(chatRoomUser -> {
-                    ChatRoomResponse response = new ChatRoomResponse();
-                    response.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
-                    response.setWorkspaceUUID(chatRoomUser.getWorkspace().getWorkspaceUUID());
-                    return response;
-                })
-                .collect(Collectors.toList());
     }
 }
