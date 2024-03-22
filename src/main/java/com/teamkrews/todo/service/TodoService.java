@@ -8,7 +8,9 @@ import com.teamkrews.global.exception.ErrorCode;
 import com.teamkrews.todo.model.Todo;
 import com.teamkrews.todo.model.TodoCompleteDto;
 import com.teamkrews.todo.model.TodoCreateDto;
+import com.teamkrews.todo.model.TodoSelectDto;
 import com.teamkrews.todo.model.response.TodoInfoResponse;
+import com.teamkrews.todo.model.response.TodoInfoResponses;
 import com.teamkrews.todo.repository.TodoRepository;
 import com.teamkrews.workspace.model.Workspace;
 import com.teamkrews.workspace.service.WorkspaceService;
@@ -17,7 +19,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +53,14 @@ public class TodoService {
         return todoInfoResponse;
     }
 
+    public TodoInfoResponses convertToResponses(List<Todo> todoList){
+        List<TodoInfoResponse> todoInfoResponseList = todoList.stream().map(
+                (e) -> convertToResponse(e)
+        ).collect(Collectors.toList());
+
+        return new TodoInfoResponses(todoInfoResponseList);
+    }
+
     @Transactional
     public Todo completeTodo(TodoCompleteDto dto){
         User user = userService.getById(dto.getUserId());
@@ -69,5 +81,11 @@ public class TodoService {
             throw new CustomException(ErrorCode.TODO_NOT_FOUND);
 
         return todoOptional.get();
+    }
+
+    public List<Todo> selectTodoList(TodoSelectDto dto){
+        Workspace workspace = workspaceService.findByUUID(dto.getWorkspaceUUID());
+        List<Todo> todoList = todoRepository.findAllByWorkspaceAndCompleted(workspace, dto.getCompleted());
+        return todoList;
     }
 }

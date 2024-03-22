@@ -1,7 +1,6 @@
 package com.teamkrews.todo.model.response;
 
 import com.teamkrews.User.model.response.UserInfoResponse;
-import com.teamkrews.workspace.model.Workspace;
 import lombok.Getter;
 import lombok.Setter;
 
