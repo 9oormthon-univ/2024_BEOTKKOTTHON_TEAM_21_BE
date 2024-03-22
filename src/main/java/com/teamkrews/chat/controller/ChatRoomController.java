@@ -57,14 +57,13 @@ public class ChatRoomController {
 
     // 내가 보낸 채팅방 목록 조회
     @GetMapping("/sent")
-    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRoomsOfSent(@AuthenticationPrincipal User user, @RequestParam WorkspaceUUIDRequest workspaceRequest) {
+    public ResponseEntity<ApiResponse<List<ChatRoom>>> getChatRoomsOfSent(@AuthenticationPrincipal User user, @RequestParam WorkspaceUUIDRequest workspaceRequest) {
 
-        Long userId = user.getId();
         String workspaceUUID = workspaceRequest.getWorkspaceUUID();
 
-        List<ChatRoomResponse> chatRoomResponses = chatRoomService.getChatRoomsOfSent(userId, workspaceUUID);
+        List<ChatRoom> chatRooms = chatRoomService.getChatRoomsOfSent(user, workspaceUUID);
 
-        return ResponseEntity.ok(ApiResponse.success(chatRoomResponses));
+        return ResponseEntity.ok(ApiResponse.success(chatRooms));
     }
 
     // 내가 받은 채팅방 목록 조회

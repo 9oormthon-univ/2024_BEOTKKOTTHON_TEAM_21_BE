@@ -13,6 +13,7 @@ import com.teamkrews.global.exception.CustomException;
 import com.teamkrews.global.exception.ErrorCode;
 import com.teamkrews.workspace.model.Workspace;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -109,20 +110,18 @@ public class ChatRoomService {
     }
 
     // 내가 보낸 채팅방 조회
-    public List<ChatRoomResponse> getChatRoomsOfSent(Long userId, String workspaceUUID) {
-        User user = userService.getById(userId);
+    public List<ChatRoom> getChatRoomsOfSent(User user, String workspaceUUID) {
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
 
         List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 1);
 
-        return chatRoomUsers.stream()
-                .map(chatRoomUser -> {
-                    ChatRoomResponse response = new ChatRoomResponse();
-                    response.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
-                    response.setWorkspaceUUID(chatRoomUser.getWorkspace().getWorkspaceUUID());
-                    return response;
-                })
-                .collect(Collectors.toList());
+        List<ChatRoom> chatRooms = new ArrayList<>();
+
+        for (ChatRoomUser chatRoomUser : chatRoomUsers) {
+            chatRooms.add(chatRoomUser.getChatRoom());
+        }
+
+        return chatRooms;
     }
 
     // 내가 받은 채팅방 조회
