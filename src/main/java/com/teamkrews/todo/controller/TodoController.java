@@ -4,6 +4,7 @@ package com.teamkrews.todo.controller;
 import com.teamkrews.User.model.User;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
 import com.teamkrews.todo.model.Todo;
+import com.teamkrews.todo.model.TodoCompleteDto;
 import com.teamkrews.todo.model.TodoCreateDto;
 import com.teamkrews.todo.model.request.TodoCreateRequest;
 import com.teamkrews.todo.model.response.TodoInfoResponse;
@@ -13,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController()
@@ -34,6 +32,17 @@ public class TodoController {
         Todo savedTodo = todoService.create(createDto);
 
         TodoInfoResponse response = todoService.convertToResponse(savedTodo);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PostMapping("complete/{todoId}")
+    ResponseEntity<ApiResponse<TodoInfoResponse>> complete(@AuthenticationPrincipal User user,
+                                                           @PathVariable Long todoId){
+
+        TodoCompleteDto completeDto = new TodoCompleteDto(user.getId(), todoId);
+        Todo completedTodo = todoService.completeTodo(completeDto);
+
+        TodoInfoResponse response = todoService.convertToResponse(completedTodo);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
