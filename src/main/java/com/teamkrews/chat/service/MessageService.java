@@ -6,6 +6,7 @@ import com.teamkrews.chat.model.request.MessageDTO;
 import com.teamkrews.chat.repository.ChatRoomRepository;
 import com.teamkrews.chat.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomService chatRoomService;
+    private final ModelMapper mapper;
 
 
     // 특정 유저의 특정 워크스페이스의 특정 채팅방의 메시지 조회
@@ -29,8 +31,7 @@ public class MessageService {
     public Message saveMessage(Long chatRoomId, MessageDTO messageDTO) {
         ChatRoom chatRoom = chatRoomService.findById(chatRoomId);
 
-        Message message = new Message();
-        message.setContent(messageDTO.getContent());
+        Message message = mapper.map(messageDTO, Message.class);
         message.setChatRoom(chatRoom);
 
         return messageRepository.save(message);
