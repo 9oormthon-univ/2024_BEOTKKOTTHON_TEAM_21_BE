@@ -5,10 +5,11 @@ import com.teamkrews.auth.controller.AuthenticationPrincipal;
 import com.teamkrews.chat.model.ChatRoom;
 import com.teamkrews.chat.model.ChatRoomCreationDto;
 import com.teamkrews.chat.model.request.ChatRoomCreationRequest;
+import com.teamkrews.chat.model.response.ChatRoomDetailResponse;
+import com.teamkrews.chat.model.response.ChatRoomListResponse;
 import com.teamkrews.chat.model.response.ChatRoomResponse;
 import com.teamkrews.chat.service.ChatRoomService;
 import com.teamkrews.utill.ApiResponse;
-import com.teamkrews.workspace.model.request.WorkspaceUUIDRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,40 +43,19 @@ public class ChatRoomController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    // 전체 채팅방 목록 조회
-    // 나중에 내가 먼저 보낸 채팅방 & 받은 채팅방으로 분리하기
-    @GetMapping("")
-    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRooms(@AuthenticationPrincipal User user, @RequestParam WorkspaceUUIDRequest workspaceRequest) {
-
-        Long userId = user.getId();
-        String workspaceUUID = workspaceRequest.getWorkspaceUUID();
-
-        List<ChatRoomResponse> chatRoomResponses = chatRoomService.getChatRoomsByUserIdAndWorkspaceUUID(userId, workspaceUUID);
-
-        return ResponseEntity.ok(ApiResponse.success(chatRoomResponses));
-    }
-
     // 내가 보낸 채팅방 목록 조회
     @GetMapping("/sent")
-    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRoomsOfSent(@AuthenticationPrincipal User user, @RequestParam WorkspaceUUIDRequest workspaceRequest) {
+    public ResponseEntity<ApiResponse<List<ChatRoomDetailResponse>>> getChatRoomsOfSent(@AuthenticationPrincipal User user, @RequestParam String workspaceUUID) {
+        List<ChatRoomDetailResponse> chatRoomDetailResponse = chatRoomService.getChatRoomsOfSent(user, workspaceUUID);
 
-        Long userId = user.getId();
-        String workspaceUUID = workspaceRequest.getWorkspaceUUID();
-
-        List<ChatRoomResponse> chatRoomResponses = chatRoomService.getChatRoomsOfSent(userId, workspaceUUID);
-
-        return ResponseEntity.ok(ApiResponse.success(chatRoomResponses));
+        return ResponseEntity.ok(ApiResponse.success(chatRoomDetailResponse));
     }
 
     // 내가 받은 채팅방 목록 조회
     @GetMapping("/received")
-    public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRoomsOfReceived(@AuthenticationPrincipal User user, @RequestParam WorkspaceUUIDRequest workspaceRequest) {
+    public ResponseEntity<ApiResponse<List<ChatRoomDetailResponse>>> getChatRoomsOfReceived(@AuthenticationPrincipal User user, @RequestParam String workspaceUUID) {
+        List<ChatRoomDetailResponse> chatRoomDetailResponse = chatRoomService.getChatRoomsOfReceived(user, workspaceUUID);
 
-        Long userId = user.getId();
-        String workspaceUUID = workspaceRequest.getWorkspaceUUID();
-
-        List<ChatRoomResponse> chatRoomResponses = chatRoomService.getChatRoomsOfReceived(userId, workspaceUUID);
-
-        return ResponseEntity.ok(ApiResponse.success(chatRoomResponses));
+        return ResponseEntity.ok(ApiResponse.success(chatRoomDetailResponse));
     }
 }
