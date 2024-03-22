@@ -3,6 +3,10 @@ package com.teamkrews.workspace.controller;
 
 import com.teamkrews.User.model.User;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
+import com.teamkrews.todo.model.Todo;
+import com.teamkrews.todo.model.TodoSelectDto;
+import com.teamkrews.todo.model.response.TodoInfoResponses;
+import com.teamkrews.todo.service.TodoService;
 import com.teamkrews.userworkspace.model.UserWorkspaceCreateDto;
 import com.teamkrews.userworkspace.model.UserWorkspaceJoinDto;
 import com.teamkrews.userworkspace.service.UserWorkspaceService;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/workspaces")
@@ -30,10 +35,11 @@ public class WorkspaceController {
     private final ModelMapper mapper;
     private final WorkspaceService workspaceService;
     private final UserWorkspaceService userWorkspaceService;
+    private final TodoService todoService;
 
     @PostMapping()
     ResponseEntity<ApiResponse<WorkspaceInfoResponse>> create(@AuthenticationPrincipal User user,
-                                                              @Valid @RequestBody WorkspaceCreateRequest request){
+                                                              @Valid @RequestBody WorkspaceCreateRequest request) {
         WorkspaceCreateDto dto = mapper.map(request, WorkspaceCreateDto.class);
         Workspace workspace = workspaceService.create(dto);
         userWorkspaceService.create(new UserWorkspaceCreateDto(user, workspace));
@@ -49,7 +55,7 @@ public class WorkspaceController {
 
     @PostMapping("/{workspaceUUID}/join")
     ResponseEntity<ApiResponse<WorkspaceInfoResponse>> join(@AuthenticationPrincipal User user,
-                                                            @PathVariable String workspaceUUID){
+                                                            @PathVariable String workspaceUUID) {
         UserWorkspaceJoinDto joinDto = new UserWorkspaceJoinDto(user, workspaceUUID);
         WorkspaceInfoResponse infoResponse = userWorkspaceService.join(joinDto);
 
@@ -60,7 +66,7 @@ public class WorkspaceController {
     ResponseEntity<ApiResponse<WorkspaceInfoResponse>> findByUUID(
             @AuthenticationPrincipal User user,
             @PathVariable String workspaceUUID
-    ){
+    ) {
         WorkspaceInfoResponse response = workspaceService.getWorkspaceInfoResponse(workspaceUUID);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -70,11 +76,22 @@ public class WorkspaceController {
             @AuthenticationPrincipal User user,
             @PathVariable String workspaceUUID,
             @RequestBody WorkspaceUpdateRequest request
-    ){
+    ) {
         WorkspaceUpdateDto dto = mapper.map(request, WorkspaceUpdateDto.class);
         dto.setWorkspaceUUID(workspaceUUID);
 
         WorkspaceInfoResponse response = workspaceService.update(dto);
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/{workspaceUUID}/todo")
+    ResponseEntity<ApiResponse<TodoInfoResponses>> selectTodoList(@AuthenticationPrincipal User user,
+                                                                 @PathVariable String workspaceUUID,
+                                                                 @RequestParam(required = false, defaultValue = "false") Boolean completed) {
+        TodoSelectDto todoSelectDto = new TodoSelectDto(workspaceUUID, completed);
+        List<Todo> todos = todoService.selectTodoList(todoSelectDto);
+        TodoInfoResponses todoInfoResponses = todoService.convertToResponses(todos);
+
+        return ResponseEntity.ok(ApiResponse.success(todoInfoResponses));
     }
 }
