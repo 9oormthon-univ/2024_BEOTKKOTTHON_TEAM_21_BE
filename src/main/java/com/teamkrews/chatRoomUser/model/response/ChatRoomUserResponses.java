@@ -10,4 +10,8 @@ import lombok.Setter;
 @Setter
 public class ChatRoomUserResponses {
     private List<ChatRoomUserResponse> chatRooms = new ArrayList<>();
+
+    public ChatRoomUserResponses(List<ChatRoomUserResponse> chatRooms) {
+        this.chatRooms = chatRooms;
+    }
 }
