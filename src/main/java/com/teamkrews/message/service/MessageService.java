@@ -23,7 +23,7 @@ public class MessageService {
     private final UserService userService;
     private final MessageRepository messageRepository;
     private final ModelMapper mapper;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 HH시 mm분");
 
 
     // 특정 유저의 특정 워크스페이스의 특정 채팅방의 메시지 조회
