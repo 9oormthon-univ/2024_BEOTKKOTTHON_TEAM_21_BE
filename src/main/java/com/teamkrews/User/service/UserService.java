@@ -3,12 +3,7 @@ package com.teamkrews.User.service;
 
 import com.teamkrews.User.model.User;
 import com.teamkrews.User.model.UserInfoUpdateDto;
-import com.teamkrews.User.model.response.UserInfoResponse;
 import com.teamkrews.User.repository.UserRepository;
-import com.teamkrews.chat.model.ChatRoom;
-import com.teamkrews.chat.repository.ChatRoomRepository;
-
-import java.util.List;
 
 import com.teamkrews.global.exception.CustomException;
 import com.teamkrews.global.exception.ErrorCode;

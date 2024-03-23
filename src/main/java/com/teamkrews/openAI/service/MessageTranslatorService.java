@@ -1,7 +1,6 @@
 package com.teamkrews.openAI.service;
 
-import com.teamkrews.chat.model.Message;
-import com.teamkrews.chat.model.request.MessageDTO;
+import com.teamkrews.message.model.request.MessageDTO;
 import com.teamkrews.openAI.model.request.MessageTranslatorDTO;
 import java.util.HashMap;
 import java.util.Map;
