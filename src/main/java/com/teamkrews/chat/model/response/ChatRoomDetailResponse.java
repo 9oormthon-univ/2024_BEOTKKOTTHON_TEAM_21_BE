@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class ChatRoomDetailResponse {
     private Long chatRoomId;
+    private Long chatRoomUserId;
     private UserInfoResponse targetUser;
 }
