@@ -7,6 +7,8 @@ import com.teamkrews.workspace.model.Workspace;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -23,4 +25,7 @@ public interface ChatRoomUserRepository extends JpaRepository<ChatRoomUser, Long
     List<ChatRoomUser> findAllByChatRoomAndNewState(ChatRoom chatRoom, Boolean newState);
 
     List<ChatRoomUser> findAllByChatRoom(ChatRoom chatRoom);
+
+    @Query("SELECT cru FROM ChatRoomUser cru WHERE cru.chatRoom = :chatRoom AND cru.user <> :user")
+    List<ChatRoomUser> findByChatRoomAndNotUser(@Param("chatRoom") ChatRoom chatRoom, @Param("user") User user);
 }

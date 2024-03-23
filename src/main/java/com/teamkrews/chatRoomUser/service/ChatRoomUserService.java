@@ -1,5 +1,7 @@
 package com.teamkrews.chatRoomUser.service;
 
+import com.teamkrews.User.model.User;
+import com.teamkrews.User.model.UserInfos;
 import com.teamkrews.User.service.UserService;
 import com.teamkrews.chatRoomUser.model.ChatRoomUser;
 import com.teamkrews.chatRoomUser.model.response.ChatRoomUserResponse;
@@ -31,21 +33,31 @@ public class ChatRoomUserService {
         return chatRoomUserOptional.get();
     }
 
-    public ChatRoomUserResponse convertToResponse(ChatRoomUser chatRoomUser){
+    public ChatRoomUserResponse convertToResponse(ChatRoomUser chatRoomUser, UserInfos userInfos){
         ChatRoomUserResponse chatRoomUserResponse = new ChatRoomUserResponse();
 
         chatRoomUserResponse.setChatRoomUserId(chatRoomUser.getId());
         chatRoomUserResponse.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
         chatRoomUserResponse.setLastMessage(messageService.convertMessageResponse(chatRoomUser.getLastMessage()));
-        chatRoomUserResponse.setTargetUser(userService.convertToInfo(chatRoomUser.getUser()));
+        chatRoomUserResponse.setTargetUsers(userInfos);
 
         return chatRoomUserResponse;
     }
 
     public ChatRoomUserResponses convertToResponses(List<ChatRoomUser> chatRoomUserList){
         List<ChatRoomUserResponse> chatRoomUserResponseList = chatRoomUserList.stream().map(
-                (chatRoomUser) ->
-                        convertToResponse(chatRoomUser)
+                (chatRoomUser) -> {
+                    List<ChatRoomUser> otherChatRoomUsers = chatRoomUserRepository.
+                            findByChatRoomAndNotUser(chatRoomUser.getChatRoom(), chatRoomUser.getUser());
+
+                    List<User> otherUsers = otherChatRoomUsers.stream().map((otherChatRoomUser) ->
+                            otherChatRoomUser.getUser()
+                    ).collect(Collectors.toList());
+
+                    UserInfos otherUserInfos = userService.convertToInfos(otherUsers);
+
+                    return convertToResponse(chatRoomUser, otherUserInfos);
+                }
 
         ).collect(Collectors.toList());
 
