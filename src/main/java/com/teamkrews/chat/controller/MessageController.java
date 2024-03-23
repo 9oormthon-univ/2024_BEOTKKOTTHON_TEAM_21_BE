@@ -3,6 +3,7 @@ package com.teamkrews.chat.controller;
 import com.teamkrews.User.model.User;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
 import com.teamkrews.chat.model.ChatRoom;
+import com.teamkrews.chat.model.ChatRoomNewStateTrueDto;
 import com.teamkrews.chat.model.ChatRoomUser;
 import com.teamkrews.chat.model.Message;
 import com.teamkrews.chat.model.request.MessageDTO;
@@ -78,7 +79,7 @@ public class MessageController {
 
         // 메시지 저장
         Message message = messageService.saveMessage(chatRoomId, messageDTO);
-
+        chatRoomService.setNewStateTrue(new ChatRoomNewStateTrueDto(chatRoomId));
         return modelMapper.map(message, MessageResponse.class);
     }
 

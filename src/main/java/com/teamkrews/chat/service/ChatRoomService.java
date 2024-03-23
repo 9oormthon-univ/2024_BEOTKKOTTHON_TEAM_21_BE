@@ -2,12 +2,9 @@ package com.teamkrews.chat.service;
 
 import com.teamkrews.User.repository.UserRepository;
 import com.teamkrews.User.service.UserService;
-import com.teamkrews.chat.model.ChatRoom;
-import com.teamkrews.chat.model.ChatRoomCreationDto;
-import com.teamkrews.chat.model.ChatRoomUser;
+import com.teamkrews.chat.model.*;
 import com.teamkrews.User.model.User;
 import com.teamkrews.chat.model.response.ChatRoomDetailResponse;
-import com.teamkrews.chat.model.response.ChatRoomListResponse;
 import com.teamkrews.chat.model.response.ChatRoomResponse;
 import com.teamkrews.chat.model.response.UserInfoResponse;
 import com.teamkrews.chat.repository.ChatRoomRepository;
@@ -37,6 +34,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomUserRepository chatRoomUserRepository;
     private final WorkspaceService workspaceService;
+    private final ChatRoomUserService chatRoomUserService;
 
     public ChatRoom findById(final Long chatRoomId){
         Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(chatRoomId);
@@ -132,6 +130,7 @@ public class ChatRoomService {
         for (ChatRoomUser userSent : chatRoomUsersSent) {
             ChatRoomDetailResponse chatRoomDetailResponse = new ChatRoomDetailResponse();
             chatRoomDetailResponse.setChatRoomId(chatRoom.getChatRoomId());
+            chatRoomDetailResponse.setChatRoomUserId(userSent.getId());
 
             UserInfoResponse userInfoResponse = new UserInfoResponse();
             userInfoResponse.setNickName(userSent.getUser().getNickName());
@@ -141,5 +140,24 @@ public class ChatRoomService {
 
             chatRoomDetails.add(chatRoomDetailResponse);
         }
+    }
+
+    @Transactional
+    public void setNewStateTrue(ChatRoomNewStateTrueDto dto){
+        ChatRoom chatRoom = findById(dto.getChatRoomId());
+        List<ChatRoomUser> chatRoomUserList = chatRoomUserRepository.findAllByChatRoomAndNewState(chatRoom, Boolean.FALSE);
+
+        chatRoomUserList.stream().forEach(
+                (chatRoomUser)->{
+                    chatRoomUser.setNewState(dto.getNewState());
+                }
+        );
+    }
+
+    @Transactional
+    public void setNewStateFalse(ChatRoomNewStateFalseDto dto){
+
+        ChatRoomUser chatRoomUser = chatRoomUserService.findById(dto.getChatRoomUserId());
+        chatRoomUser.setNewState(dto.getNewState());
     }
 }
