@@ -5,6 +5,7 @@ import com.teamkrews.message.model.Message;
 import com.teamkrews.chatroom.service.ChatRoomService;
 import com.teamkrews.message.model.request.MessageDTO;
 import com.teamkrews.message.model.response.MessageResponse;
+import com.teamkrews.message.model.response.MessageResponses;
 import com.teamkrews.message.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -43,5 +45,16 @@ public class MessageService {
         MessageResponse messageResponse = mapper.map(message, MessageResponse.class);
         messageResponse.setDateTime(message.getCreatedAt().format(formatter));
         return messageResponse;
+    }
+
+    public MessageResponses convertMessageResponses(List<Message> messages){
+        if (messages == null)
+            return null;
+
+        List<MessageResponse> messageResponseList = messages.stream().map(
+                (message) -> convertMessageResponse(message)
+        ).collect(Collectors.toList());
+
+        return new MessageResponses(messageResponseList);
     }
 }
