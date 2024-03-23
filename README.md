@@ -1,6 +1,7 @@
 # 2024_BEOTKKOTTHON_TEAM_21_BE: TeamKrews
 ![image](https://github.com/goormthon-Univ/2024_BEOTKKOTTHON_TEAM_21_BE/assets/62204810/3eca2371-577e-4a96-91e6-39dc0793fe0c)
 
+
 ## ☁️ **아이디어 명**
 
 **팀크루즈(TeamKrews)** 는 **팀(Team)** 과 **카카오 크루(Krew)** 의 합성어로, 한 팀(Team)으로써 같은 배를 탄 선원(Crew)이자 가보지 않은 길을 함께 항해하는 구성원들을 상징합니다.
@@ -8,6 +9,7 @@
 카카오는 크루가 주도적으로 성장할 수 있는 환경을 조성하고 크루 개인의 역량을 마음껏 펼칠 수 있도록 아낌없이 지원하며 ESG FrameWork 중 하나인 **‘함께 성장’**의 가치를 증진하고 있습니다.
 
 (출처: 카카오 2022 ESG보고서)
+
 
 ## ☘️ **아이디어 설명**
 
@@ -45,7 +47,8 @@
 
 **배포 주소**: http://teamkrews-front-bucket.s3-website.ap-northeast-2.amazonaws.com/ 
 
-## 시스템 아키텍쳐
+
+## 🖥 시스템 아키텍쳐
 ![image](https://github.com/goormthon-Univ/2024_BEOTKKOTTHON_TEAM_21_BE/assets/62204810/82193082-26d2-4b42-9479-50802f9a6fcd)
 
 
