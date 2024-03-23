@@ -30,14 +30,14 @@ public class MessageTranslatorService {
         final String content = messageDTO.getContent();
 
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "gpt-3.5-turbo");
+        requestBody.put("model", "gpt-4");
         requestBody.put("temperature", 0.8);
         requestBody.put("max_tokens", 4096);
         requestBody.put("top_p", 1);
         requestBody.put("messages", new Object[] {
                 new HashMap<String, String>() {{
                     put("role", "system");
-                    put("content", "content를 '~용' 으로 말투를 바꿔줘. 의문문에도 해당이야.");
+                    put("content", "content를 안녕하세용, 반갑습니당, 어때용? 처럼 용체로 말투 혹은 문체를 바꿔줘. 의문문에도 해당이야.");
                 }},
                 new HashMap<String, String>() {{
                     put("role", "user");
@@ -70,14 +70,13 @@ public class MessageTranslatorService {
         final String content = messageTranslatorDTO.getContent();
 
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "gpt-3.5-turbo");
+        requestBody.put("model", "gpt-4");
         requestBody.put("temperature", 0.8);
         requestBody.put("max_tokens", 4096);
         requestBody.put("top_p", 1);
         requestBody.put("messages", new Object[] {
                 new HashMap<String, String>() {{
-                    put("role", "system");
-                    put("content", "content를 '~용' 으로 말투를 바꿔줘.");
+                    put("content", "content를 안녕하세용, 반갑습니당, 어때용? 처럼 용체로 말투 혹은 문체를 바꿔줘. 의문문에도 해당이야.");
                 }},
                 new HashMap<String, String>() {{
                     put("role", "user");
