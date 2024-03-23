@@ -70,9 +70,10 @@ public class MessageController {
     @MessageMapping("/message/{chatRoomId}") // /pub/message/{chatRoomId}로 날린 데이터에 대해 /sub/message/{chatRoomId} 구독자들에게 메시지 전송
     @SendTo("/message/room/{chatRoomId}")
     public MessageResponse sendAndSaveMessage(@DestinationVariable Long chatRoomId, @Payload MessageDTO messageDTO) {
-        // 메시지 말투 변환
 
         log.info("Message Catch !!");
+
+        // 메시지 말투 변환
         String transformedMessage = messageTranslatorService.transformMessage(messageDTO);
         messageDTO.setContent(transformedMessage);
 
