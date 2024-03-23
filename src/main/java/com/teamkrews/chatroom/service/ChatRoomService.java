@@ -91,7 +91,7 @@ public class ChatRoomService {
     // 내가 보낸 채팅방 조회
     public ChatRoomUserResponses getChatRoomsOfSent(User user, String workspaceUUID) {
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
-        List<ChatRoomUser> chatRoomUserSent = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 1);
+        List<ChatRoomUser> chatRoomUserSent = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreatorOrderByLastMessage(user, workspace, 1);
 
         ChatRoomUserResponses chatRoomUserResponses = chatRoomUserService.convertToResponses(chatRoomUserSent);
         return chatRoomUserResponses;
@@ -100,9 +100,9 @@ public class ChatRoomService {
     // 내가 받은 채팅방 조회
     public ChatRoomUserResponses getChatRoomsOfReceived(User user, String workspaceUUID) {
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
-        List<ChatRoomUser> chatRoomUserReceived = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 0);
+        List<ChatRoomUser> chatRoomUserReceived = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreatorOrderByLastMessage(user, workspace, 0);
 
-        ChatRoomUserResponses chatRoomUserResponses = chatRoomUserService.convertToResponses(chatRoomUserReceived);
+        ChatRoomUserResponses chatRoomUserResponses = chatRoomUserService.convertToResponsesWithAnonymousUserInfo(chatRoomUserReceived);
         return chatRoomUserResponses;
     }
 
