@@ -1,6 +1,8 @@
 package com.teamkrews.message.controller;
 
 import com.teamkrews.User.model.User;
+import com.teamkrews.User.model.UserInfo;
+import com.teamkrews.User.service.UserService;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
 import com.teamkrews.chatroom.model.ChatRoom;
 import com.teamkrews.chatroom.model.ChatRoomNewStateTrueDto;
@@ -41,7 +43,7 @@ import java.util.List;
 @RequestMapping("/message")
 @Slf4j
 public class MessageController {
-
+    private final UserService userService;
     private final MessageService messageService;
     private final ChatRoomService chatRoomService;
     private final ChatRoomUserRepository chatRoomUserRepository;
@@ -75,22 +77,27 @@ public class MessageController {
     @MessageMapping("/message/{chatRoomId}") // /pub/message/{chatRoomId}로 날린 데이터에 대해 /sub/message/{chatRoomId} 구독자들에게 메시지 전송
     @SendTo("/message/room/{chatRoomId}")
     public MessageResponse sendAndSaveMessage(@DestinationVariable Long chatRoomId, @Payload MessageDTO messageDTO) {
-
         log.info("Message Catch !!");
 
         // 메시지 말투 변환
         String transformedMessage = messageTranslatorService.transformMessage(messageDTO);
         messageDTO.setContent(transformedMessage);
 
-
         // 메시지 저장
         ChatRoom chatRoom = chatRoomService.findById(chatRoomId);
         Message message = messageService.saveMessage(chatRoom, messageDTO);
+
+        // 메시지 받았을 때 처리
         chatRoomService.updateLastMessage(chatRoomId, message);
         chatRoomService.setNewStateTrue(new ChatRoomNewStateTrueDto(chatRoomId));
-        MessageResponse messageResponse = messageService.convertMessageResponse(message);
 
-        return messageResponse;
+        User chatRoomCreator = chatRoom.getCreator();
+        User sendUser = userService.getById(messageDTO.getSenderId());
+
+        if(chatRoomCreator.getId() == sendUser.getId())
+            return messageService.convertMessageResponse(message, UserInfo.getAnonymousUserInfo());
+
+        return messageService.convertMessageResponse(message, userService.convertToInfo(sendUser));
     }
 
     // 말투 변환 테스트

@@ -41,7 +41,7 @@ public class ChatRoomUserService {
 
         chatRoomUserResponse.setChatRoomUserId(chatRoomUser.getId());
         chatRoomUserResponse.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
-        chatRoomUserResponse.setLastMessage(messageService.convertMessageResponse(chatRoomUser.getLastMessage()));
+        chatRoomUserResponse.setLastMessage(messageService.convertMessageResponse(chatRoomUser.getLastMessage(), null));
         chatRoomUserResponse.setTargetUsers(userInfos);
 
         return chatRoomUserResponse;

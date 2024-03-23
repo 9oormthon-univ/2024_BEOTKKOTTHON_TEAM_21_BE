@@ -1,8 +1,10 @@
 package com.teamkrews.message.service;
 
+import com.teamkrews.User.model.User;
+import com.teamkrews.User.model.UserInfo;
+import com.teamkrews.User.service.UserService;
 import com.teamkrews.chatroom.model.ChatRoom;
 import com.teamkrews.message.model.Message;
-import com.teamkrews.chatroom.service.ChatRoomService;
 import com.teamkrews.message.model.request.MessageDTO;
 import com.teamkrews.message.model.response.MessageResponse;
 import com.teamkrews.message.model.response.MessageResponses;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class MessageService {
-
+    private final UserService userService;
     private final MessageRepository messageRepository;
     private final ModelMapper mapper;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
@@ -38,12 +40,13 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public MessageResponse convertMessageResponse(Message message){
+    public MessageResponse convertMessageResponse(Message message, UserInfo userInfo){
         if (message == null)
             return null;
 
         MessageResponse messageResponse = mapper.map(message, MessageResponse.class);
         messageResponse.setDateTime(message.getCreatedAt().format(formatter));
+        messageResponse.setUserInfo(userInfo);
         return messageResponse;
     }
 
@@ -52,7 +55,10 @@ public class MessageService {
             return null;
 
         List<MessageResponse> messageResponseList = messages.stream().map(
-                (message) -> convertMessageResponse(message)
+                (message) -> {
+                    User user = userService.getById(message.getSenderId());
+                    return convertMessageResponse(message, userService.convertToInfo(user));
+                }
         ).collect(Collectors.toList());
 
         return new MessageResponses(messageResponseList);

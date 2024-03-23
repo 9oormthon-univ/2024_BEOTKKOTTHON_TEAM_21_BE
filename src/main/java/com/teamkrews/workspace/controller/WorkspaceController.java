@@ -54,13 +54,13 @@ public class WorkspaceController {
         userWorkspaceService.create(new UserWorkspaceCreateDto(user, workspace));
 
         //workspace생성시 그룹 채팅 생성
-        String workspaceUUID = workspace.getWorkspaceUUID();
-        Long creatorUserId = user.getId();
-        List<Long> userIds = new ArrayList<>();
-        userIds.add(user.getId());
-        ChatRoomCreationDto roomCreationDto = new ChatRoomCreationDto(workspaceUUID, creatorUserId, userIds, Boolean.TRUE);
+//        String workspaceUUID = workspace.getWorkspaceUUID();
+//        Long creatorUserId = user.getId();
+//        List<Long> userIds = new ArrayList<>();
+//        userIds.add(user.getId());
+//        ChatRoomCreationDto roomCreationDto = new ChatRoomCreationDto(workspaceUUID, creatorUserId, userIds, Boolean.TRUE);
+//        chatRoomService.createChatRoomWithUser(roomCreationDto);
 
-        chatRoomService.createChatRoomWithUser(roomCreationDto);
         WorkspaceInfoResponse response = workspaceService.getWorkspaceInfoResponse(workspace.getWorkspaceUUID());
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -77,7 +77,7 @@ public class WorkspaceController {
         UserWorkspaceJoinDto joinDto = new UserWorkspaceJoinDto(user, workspaceUUID);
         WorkspaceInfoResponse infoResponse = userWorkspaceService.join(joinDto);
 
-        chatRoomUserService.joinGroupChatRoom(user, workspaceService.findByUUID(workspaceUUID));
+//        chatRoomUserService.joinGroupChatRoom(user, workspaceService.findByUUID(workspaceUUID));
         return ResponseEntity.ok(ApiResponse.success(infoResponse));
     }
 

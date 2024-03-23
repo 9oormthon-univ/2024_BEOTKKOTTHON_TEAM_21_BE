@@ -60,7 +60,7 @@ public class ChatRoomService {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setUserCnt(Long.valueOf(userIdsSet.size()));
         chatRoom.setIsGroup(dto.getIsGroup());
-
+        chatRoom.setCreator(userService.getById(dto.getCreatorUserId()));
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         userIdsSet.stream().forEach((id)->{
