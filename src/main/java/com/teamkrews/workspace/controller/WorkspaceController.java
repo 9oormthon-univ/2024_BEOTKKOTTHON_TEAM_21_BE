@@ -3,6 +3,12 @@ package com.teamkrews.workspace.controller;
 
 import com.teamkrews.User.model.User;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
+import com.teamkrews.chatRoomUser.repository.ChatRoomUserRepository;
+import com.teamkrews.chatRoomUser.service.ChatRoomUserService;
+import com.teamkrews.chatroom.model.ChatRoomCreationDto;
+import com.teamkrews.chatroom.model.request.ChatRoomCreationRequest;
+import com.teamkrews.chatroom.model.response.ChatRoomResponse;
+import com.teamkrews.chatroom.service.ChatRoomService;
 import com.teamkrews.todo.model.Todo;
 import com.teamkrews.todo.model.TodoSelectDto;
 import com.teamkrews.todo.model.response.TodoInfoResponses;
@@ -26,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,7 +42,9 @@ public class WorkspaceController {
     private final ModelMapper mapper;
     private final WorkspaceService workspaceService;
     private final UserWorkspaceService userWorkspaceService;
+    private final ChatRoomService chatRoomService;
     private final TodoService todoService;
+    private final ChatRoomUserService chatRoomUserService;
 
     @PostMapping()
     ResponseEntity<ApiResponse<WorkspaceInfoResponse>> create(@AuthenticationPrincipal User user,
@@ -43,6 +52,15 @@ public class WorkspaceController {
         WorkspaceCreateDto dto = mapper.map(request, WorkspaceCreateDto.class);
         Workspace workspace = workspaceService.create(dto);
         userWorkspaceService.create(new UserWorkspaceCreateDto(user, workspace));
+
+        //workspace생성시 그룹 채팅 생성
+        String workspaceUUID = workspace.getWorkspaceUUID();
+        Long creatorUserId = user.getId();
+        List<Long> userIds = new ArrayList<>();
+        userIds.add(user.getId());
+        ChatRoomCreationDto roomCreationDto = new ChatRoomCreationDto(workspaceUUID, creatorUserId, userIds, Boolean.TRUE);
+
+        chatRoomService.createChatRoomWithUser(roomCreationDto);
         WorkspaceInfoResponse response = workspaceService.getWorkspaceInfoResponse(workspace.getWorkspaceUUID());
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -59,6 +77,7 @@ public class WorkspaceController {
         UserWorkspaceJoinDto joinDto = new UserWorkspaceJoinDto(user, workspaceUUID);
         WorkspaceInfoResponse infoResponse = userWorkspaceService.join(joinDto);
 
+        chatRoomUserService.joinGroupChatRoom(user, workspaceService.findByUUID(workspaceUUID));
         return ResponseEntity.ok(ApiResponse.success(infoResponse));
     }
 

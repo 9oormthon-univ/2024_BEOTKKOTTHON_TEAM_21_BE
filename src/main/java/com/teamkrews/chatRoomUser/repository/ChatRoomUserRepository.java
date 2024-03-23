@@ -6,6 +6,8 @@ import com.teamkrews.chatRoomUser.model.ChatRoomUser;
 import com.teamkrews.workspace.model.Workspace;
 import java.util.List;
 import java.util.Optional;
+
+import org.hibernate.jdbc.Work;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +30,6 @@ public interface ChatRoomUserRepository extends JpaRepository<ChatRoomUser, Long
 
     @Query("SELECT cru FROM ChatRoomUser cru WHERE cru.chatRoom = :chatRoom AND cru.user <> :user")
     List<ChatRoomUser> findByChatRoomAndNotUser(@Param("chatRoom") ChatRoom chatRoom, @Param("user") User user);
+
+    List<ChatRoomUser> findAllByWorkspace(Workspace workspace);
 }

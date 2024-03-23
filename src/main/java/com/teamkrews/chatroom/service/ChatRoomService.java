@@ -59,6 +59,7 @@ public class ChatRoomService {
 
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setUserCnt(Long.valueOf(userIdsSet.size()));
+        chatRoom.setIsGroup(dto.getIsGroup());
 
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
@@ -78,7 +79,6 @@ public class ChatRoomService {
 
         return chatRoomResponse;
     }
-
     private void createAndSaveChatRoomUser(ChatRoom chatRoom, User user, Workspace workspace, int isCreator) {
         ChatRoomUser chatRoomUser = new ChatRoomUser();
         chatRoomUser.setChatRoom(chatRoom);
@@ -120,7 +120,6 @@ public class ChatRoomService {
 
     @Transactional
     public void setNewStateFalse(ChatRoomNewStateFalseDto dto){
-
         ChatRoomUser chatRoomUser = chatRoomUserService.findById(dto.getChatRoomUserId());
         chatRoomUser.setNewState(dto.getNewState());
     }
@@ -135,4 +134,6 @@ public class ChatRoomService {
             chatRoomUser.setLastMessage(message);
         });
     }
+
+
 }

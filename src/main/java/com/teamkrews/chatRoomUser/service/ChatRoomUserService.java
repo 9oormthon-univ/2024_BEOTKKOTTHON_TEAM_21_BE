@@ -7,11 +7,14 @@ import com.teamkrews.chatRoomUser.model.ChatRoomUser;
 import com.teamkrews.chatRoomUser.model.response.ChatRoomUserResponse;
 import com.teamkrews.chatRoomUser.model.response.ChatRoomUserResponses;
 import com.teamkrews.chatRoomUser.repository.ChatRoomUserRepository;
+import com.teamkrews.chatroom.model.ChatRoom;
 import com.teamkrews.global.exception.CustomException;
 import com.teamkrews.global.exception.ErrorCode;
 import com.teamkrews.message.service.MessageService;
+import com.teamkrews.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,5 +65,30 @@ public class ChatRoomUserService {
         ).collect(Collectors.toList());
 
         return new ChatRoomUserResponses(chatRoomUserResponseList);
+    }
+
+    @Transactional
+    public void joinGroupChatRoom(User user, Workspace workspace){
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findAllByWorkspace(workspace);
+
+        ChatRoomUser groupChatRoomUser = null;
+        for (ChatRoomUser chatRoomUser : chatRoomUsers) {
+            if(chatRoomUser.getChatRoom().getIsGroup()){
+                groupChatRoomUser = chatRoomUser;
+                break;
+            }
+        }
+
+        if (groupChatRoomUser == null) return;
+
+        ChatRoom groupChatRoom = groupChatRoomUser.getChatRoom();
+        groupChatRoom.setUserCnt(groupChatRoom.getUserCnt() + 1);
+
+        ChatRoomUser chatRoomUser = new ChatRoomUser();
+        chatRoomUser.setChatRoom(groupChatRoom);
+        chatRoomUser.setUser(user);
+        chatRoomUser.setWorkspace(workspace);
+        chatRoomUser.setIsCreator(0);
+        chatRoomUserRepository.save(chatRoomUser);
     }
  }
