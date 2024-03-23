@@ -2,6 +2,7 @@ package com.teamkrews.chatRoomUser.model;
 
 import com.teamkrews.User.model.User;
 import com.teamkrews.chatroom.model.ChatRoom;
+import com.teamkrews.message.model.Message;
 import com.teamkrews.workspace.model.Workspace;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +40,10 @@ public class ChatRoomUser {
     @ManyToOne
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
+
+    @ManyToOne
+    @JoinColumn(name = "message_id")
+    private Message lastMessage;
 
     private Boolean newState = false;
 }

@@ -1,6 +1,5 @@
 package com.teamkrews.message.model.response;
 
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,5 +11,5 @@ public class MessageResponse {
 
     private String content;
 
-    private LocalDateTime createdAt;
+    private String dateTime;
 }

@@ -6,13 +6,16 @@ import com.teamkrews.chatRoomUser.model.ChatRoomUser;
 import com.teamkrews.chatRoomUser.service.ChatRoomUserService;
 import com.teamkrews.chatroom.model.*;
 import com.teamkrews.User.model.User;
-import com.teamkrews.chatroom.model.response.ChatRoomDetailResponse;
+import com.teamkrews.chatRoomUser.model.response.ChatRoomUserResponse;
 import com.teamkrews.chatroom.model.response.ChatRoomResponse;
-import com.teamkrews.chatroom.model.response.UserInfoResponse;
+import com.teamkrews.User.model.UserInfo;
 import com.teamkrews.chatroom.repository.ChatRoomRepository;
 import com.teamkrews.chatRoomUser.repository.ChatRoomUserRepository;
 import com.teamkrews.global.exception.CustomException;
 import com.teamkrews.global.exception.ErrorCode;
+import com.teamkrews.message.model.Message;
+import com.teamkrews.message.model.response.MessageResponse;
+import com.teamkrews.message.service.MessageService;
 import com.teamkrews.workspace.model.Workspace;
 
 import java.util.ArrayList;
@@ -30,13 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 public class ChatRoomService {
-    private final UserRepository userRepository;
-
     private final UserService userService;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomUserRepository chatRoomUserRepository;
     private final WorkspaceService workspaceService;
     private final ChatRoomUserService chatRoomUserService;
+    private final MessageService messageService;
 
     public ChatRoom findById(final Long chatRoomId){
         Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(chatRoomId);
@@ -92,12 +94,12 @@ public class ChatRoomService {
     }
 
     // 내가 보낸 채팅방 조회
-    public List<ChatRoomDetailResponse> getChatRoomsOfSent(User user, String workspaceUUID) {
+    public List<ChatRoomUserResponse> getChatRoomsOfSent(User user, String workspaceUUID) {
 
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
         List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 1);
 
-        List<ChatRoomDetailResponse> chatRoomDetails = new ArrayList<>();
+        List<ChatRoomUserResponse> chatRoomDetails = new ArrayList<>();
         for (ChatRoomUser chatRoomUser : chatRoomUsers) {
             ChatRoom chatRoom = chatRoomUser.getChatRoom();
 
@@ -110,12 +112,12 @@ public class ChatRoomService {
     }
 
     // 내가 받은 채팅방 조회
-    public List<ChatRoomDetailResponse> getChatRoomsOfReceived(User user, String workspaceUUID) {
+    public List<ChatRoomUserResponse> getChatRoomsOfReceived(User user, String workspaceUUID) {
 
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
         List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 0);
 
-        List<ChatRoomDetailResponse> chatRoomDetails = new ArrayList<>();
+        List<ChatRoomUserResponse> chatRoomDetails = new ArrayList<>();
         for (ChatRoomUser chatRoomUser : chatRoomUsers) {
             ChatRoom chatRoom = chatRoomUser.getChatRoom();
 
@@ -127,20 +129,23 @@ public class ChatRoomService {
         return chatRoomDetails;
     }
 
-    private void parseForResponse(List<ChatRoomDetailResponse> chatRoomDetails, ChatRoom chatRoom,
+    private void parseForResponse(List<ChatRoomUserResponse> chatRoomDetails, ChatRoom chatRoom,
                                   List<ChatRoomUser> chatRoomUsersSent) {
         for (ChatRoomUser userSent : chatRoomUsersSent) {
-            ChatRoomDetailResponse chatRoomDetailResponse = new ChatRoomDetailResponse();
-            chatRoomDetailResponse.setChatRoomId(chatRoom.getChatRoomId());
-            chatRoomDetailResponse.setChatRoomUserId(userSent.getId());
+            ChatRoomUserResponse chatRoomUserResponse = new ChatRoomUserResponse();
+            chatRoomUserResponse.setChatRoomId(chatRoom.getChatRoomId());
+            chatRoomUserResponse.setChatRoomUserId(userSent.getId());
 
-            UserInfoResponse userInfoResponse = new UserInfoResponse();
-            userInfoResponse.setNickName(userSent.getUser().getNickName());
-            userInfoResponse.setProfileImageUrl(userSent.getUser().getProfileImageUrl());
+            MessageResponse lastMessageResponse = messageService.convertMessageResponse(userSent.getLastMessage());
+            chatRoomUserResponse.setLastMessage(lastMessageResponse);
 
-            chatRoomDetailResponse.setTargetUser(userInfoResponse);
+            UserInfo userInfo = new UserInfo();
+            userInfo.setNickName(userSent.getUser().getNickName());
+            userInfo.setProfileImageUrl(userSent.getUser().getProfileImageUrl());
 
-            chatRoomDetails.add(chatRoomDetailResponse);
+            chatRoomUserResponse.setTargetUser(userInfo);
+
+            chatRoomDetails.add(chatRoomUserResponse);
         }
     }
 
@@ -161,5 +166,16 @@ public class ChatRoomService {
 
         ChatRoomUser chatRoomUser = chatRoomUserService.findById(dto.getChatRoomUserId());
         chatRoomUser.setNewState(dto.getNewState());
+    }
+
+    @Transactional
+    public void updateLastMessage(Long chatRoomId, Message message){
+        ChatRoom chatRoom = findById(chatRoomId);
+
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findAllByChatRoom(chatRoom);
+
+        chatRoomUsers.forEach((chatRoomUser)->{
+            chatRoomUser.setLastMessage(message);
+        });
     }
 }

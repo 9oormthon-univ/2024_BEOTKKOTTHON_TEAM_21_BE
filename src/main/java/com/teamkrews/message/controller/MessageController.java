@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -77,10 +78,15 @@ public class MessageController {
         String transformedMessage = messageTranslatorService.transformMessage(messageDTO);
         messageDTO.setContent(transformedMessage);
 
+
         // 메시지 저장
-        Message message = messageService.saveMessage(chatRoomId, messageDTO);
+        ChatRoom chatRoom = chatRoomService.findById(chatRoomId);
+        Message message = messageService.saveMessage(chatRoom, messageDTO);
+        chatRoomService.updateLastMessage(chatRoomId, message);
         chatRoomService.setNewStateTrue(new ChatRoomNewStateTrueDto(chatRoomId));
-        return modelMapper.map(message, MessageResponse.class);
+        MessageResponse messageResponse = messageService.convertMessageResponse(message);
+
+        return messageResponse;
     }
 
     // 말투 변환 테스트
