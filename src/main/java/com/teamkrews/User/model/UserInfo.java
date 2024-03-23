@@ -1,11 +1,11 @@
-package com.teamkrews.chatroom.model.response;
+package com.teamkrews.User.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserInfoResponse {
+public class UserInfo {
     private String nickName;
     private String profileImageUrl;
 }
