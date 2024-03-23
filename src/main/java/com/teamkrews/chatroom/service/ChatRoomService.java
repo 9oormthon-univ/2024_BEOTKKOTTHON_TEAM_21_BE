@@ -113,7 +113,9 @@ public class ChatRoomService {
 
         chatRoomUserList.stream().forEach(
                 (chatRoomUser)->{
-                    chatRoomUser.setNewState(dto.getNewState());
+
+                    if(chatRoomUser.getUser().getId() != dto.senderId)
+                        chatRoomUser.setNewState(dto.getNewState());
                 }
         );
     }

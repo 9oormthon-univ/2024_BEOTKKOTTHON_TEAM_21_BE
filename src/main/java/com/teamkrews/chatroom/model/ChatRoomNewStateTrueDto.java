@@ -7,9 +7,11 @@ import lombok.Setter;
 @Setter
 public class ChatRoomNewStateTrueDto {
     public  Long chatRoomId;
+    public  Long senderId;
     public  final Boolean newState = Boolean.TRUE;
 
-    public ChatRoomNewStateTrueDto(Long chatRoomId) {
+    public ChatRoomNewStateTrueDto(Long chatRoomId, Long senderId) {
         this.chatRoomId = chatRoomId;
+        this.senderId = senderId;
     }
 }
