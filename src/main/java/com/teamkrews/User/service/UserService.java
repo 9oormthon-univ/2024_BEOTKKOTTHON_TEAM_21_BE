@@ -2,6 +2,7 @@ package com.teamkrews.User.service;
 
 
 import com.teamkrews.User.model.User;
+import com.teamkrews.User.model.UserInfo;
 import com.teamkrews.User.model.UserInfoUpdateDto;
 import com.teamkrews.User.repository.UserRepository;
 
@@ -48,5 +49,12 @@ public class UserService {
             user.setProfileImageUrl(dto.getProfileImageUrl());
 
         return user;
+    }
+
+    public UserInfo convertToInfo(User user){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setNickName(user.getNickName());
+        userInfo.setProfileImageUrl(user.getProfileImageUrl());
+        return userInfo;
     }
 }

@@ -2,13 +2,12 @@ package com.teamkrews.chatroom.controller;
 
 import com.teamkrews.User.model.User;
 import com.teamkrews.auth.controller.AuthenticationPrincipal;
+import com.teamkrews.chatRoomUser.model.response.ChatRoomUserResponses;
 import com.teamkrews.chatroom.model.ChatRoomCreationDto;
 import com.teamkrews.chatroom.model.request.ChatRoomCreationRequest;
-import com.teamkrews.chatRoomUser.model.response.ChatRoomUserResponse;
 import com.teamkrews.chatroom.model.response.ChatRoomResponse;
 import com.teamkrews.chatroom.service.ChatRoomService;
 import com.teamkrews.utill.ApiResponse;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -43,17 +42,15 @@ public class ChatRoomController {
 
     // 내가 보낸 채팅방 목록 조회
     @GetMapping("/sent")
-    public ResponseEntity<ApiResponse<List<ChatRoomUserResponse>>> getChatRoomsOfSent(@AuthenticationPrincipal User user, @RequestParam String workspaceUUID) {
-        List<ChatRoomUserResponse> chatRoomUserResponse = chatRoomService.getChatRoomsOfSent(user, workspaceUUID);
-
-        return ResponseEntity.ok(ApiResponse.success(chatRoomUserResponse));
+    public ResponseEntity<ApiResponse<ChatRoomUserResponses>> getChatRoomsOfSent(@AuthenticationPrincipal User user, @RequestParam String workspaceUUID) {
+        ChatRoomUserResponses chatRoomUserResponses = chatRoomService.getChatRoomsOfSent(user, workspaceUUID);
+        return ResponseEntity.ok(ApiResponse.success(chatRoomUserResponses));
     }
 
     // 내가 받은 채팅방 목록 조회
     @GetMapping("/received")
-    public ResponseEntity<ApiResponse<List<ChatRoomUserResponse>>> getChatRoomsOfReceived(@AuthenticationPrincipal User user, @RequestParam String workspaceUUID) {
-        List<ChatRoomUserResponse> chatRoomUserResponse = chatRoomService.getChatRoomsOfReceived(user, workspaceUUID);
-
-        return ResponseEntity.ok(ApiResponse.success(chatRoomUserResponse));
+    public ResponseEntity<ApiResponse<ChatRoomUserResponses>> getChatRoomsOfReceived(@AuthenticationPrincipal User user, @RequestParam String workspaceUUID) {
+        ChatRoomUserResponses chatRoomUserResponses = chatRoomService.getChatRoomsOfReceived(user, workspaceUUID);
+        return ResponseEntity.ok(ApiResponse.success(chatRoomUserResponses));
     }
 }
