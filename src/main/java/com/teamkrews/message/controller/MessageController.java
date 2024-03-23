@@ -89,7 +89,7 @@ public class MessageController {
 
         // 메시지 받았을 때 처리
         chatRoomService.updateLastMessage(chatRoomId, message);
-        chatRoomService.setNewStateTrue(new ChatRoomNewStateTrueDto(chatRoomId));
+        chatRoomService.setNewStateTrue(new ChatRoomNewStateTrueDto(chatRoomId, messageDTO.getSenderId()));
 
         User chatRoomCreator = chatRoom.getCreator();
         User sendUser = userService.getById(messageDTO.getSenderId());
