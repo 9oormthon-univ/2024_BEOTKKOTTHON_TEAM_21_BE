@@ -12,4 +12,5 @@ public class ChatRoomUserResponse {
     private Long chatRoomUserId;
     private UserInfos targetUsers;
     private MessageResponse lastMessage;
+    private Boolean isNew;
 }

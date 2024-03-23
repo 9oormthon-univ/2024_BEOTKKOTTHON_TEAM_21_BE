@@ -45,6 +45,7 @@ public class ChatRoomUserService {
         chatRoomUserResponse.setChatRoomId(chatRoomUser.getChatRoom().getChatRoomId());
         chatRoomUserResponse.setLastMessage(messageService.convertMessageResponse(chatRoomUser.getLastMessage(), null));
         chatRoomUserResponse.setTargetUsers(userInfos);
+        chatRoomUserResponse.setIsNew(chatRoomUser.getNewState());
 
         return chatRoomUserResponse;
     }
@@ -114,5 +115,11 @@ public class ChatRoomUserService {
         chatRoomUser.setWorkspace(workspace);
         chatRoomUser.setIsCreator(0);
         chatRoomUserRepository.save(chatRoomUser);
+    }
+
+    @Transactional
+    public void checkChatRoomUser(Long chatRoomUserId){
+        ChatRoomUser chatRoomUser = findById(chatRoomUserId);
+        chatRoomUser.setNewState(Boolean.FALSE);
     }
  }
