@@ -4,6 +4,7 @@ package com.teamkrews.User.service;
 import com.teamkrews.User.model.User;
 import com.teamkrews.User.model.UserInfo;
 import com.teamkrews.User.model.UserInfoUpdateDto;
+import com.teamkrews.User.model.UserInfos;
 import com.teamkrews.User.repository.UserRepository;
 
 import com.teamkrews.global.exception.CustomException;
@@ -13,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,5 +59,13 @@ public class UserService {
         userInfo.setNickName(user.getNickName());
         userInfo.setProfileImageUrl(user.getProfileImageUrl());
         return userInfo;
+    }
+
+    public UserInfos convertToInfos(List<User> userList){
+        List<UserInfo> userInfoList = userList.stream().map(
+                (user) -> convertToInfo(user)
+        ).collect(Collectors.toList());
+
+        return new UserInfos(userInfoList);
     }
 }

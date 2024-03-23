@@ -17,6 +17,7 @@ import com.teamkrews.workspace.model.Workspace;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.teamkrews.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,8 @@ public class ChatRoomService {
 
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setUserCnt(Long.valueOf(userIdsSet.size()));
-
+        chatRoom.setIsGroup(dto.getIsGroup());
+        chatRoom.setCreator(userService.getById(dto.getCreatorUserId()));
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         userIdsSet.stream().forEach((id)->{
@@ -77,7 +79,6 @@ public class ChatRoomService {
 
         return chatRoomResponse;
     }
-
     private void createAndSaveChatRoomUser(ChatRoom chatRoom, User user, Workspace workspace, int isCreator) {
         ChatRoomUser chatRoomUser = new ChatRoomUser();
         chatRoomUser.setChatRoom(chatRoom);
@@ -89,7 +90,6 @@ public class ChatRoomService {
 
     // 내가 보낸 채팅방 조회
     public ChatRoomUserResponses getChatRoomsOfSent(User user, String workspaceUUID) {
-
         Workspace workspace = workspaceService.findByUUID(workspaceUUID);
         List<ChatRoomUser> chatRoomUserSent = chatRoomUserRepository.findByUserAndWorkspaceAndIsCreator(user, workspace, 1);
 
@@ -120,7 +120,6 @@ public class ChatRoomService {
 
     @Transactional
     public void setNewStateFalse(ChatRoomNewStateFalseDto dto){
-
         ChatRoomUser chatRoomUser = chatRoomUserService.findById(dto.getChatRoomUserId());
         chatRoomUser.setNewState(dto.getNewState());
     }
@@ -135,4 +134,6 @@ public class ChatRoomService {
             chatRoomUser.setLastMessage(message);
         });
     }
+
+
 }

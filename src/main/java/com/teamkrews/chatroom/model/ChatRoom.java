@@ -1,11 +1,7 @@
 package com.teamkrews.chatroom.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.teamkrews.User.model.User;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +15,9 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_room_id")
     private Long chatRoomId;
-
     private Long userCnt;
+    private Boolean isGroup;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private User creator;
 }
