@@ -1,6 +1,7 @@
 package com.teamkrews.chatRoomUser.service;
 
 import com.teamkrews.User.model.User;
+import com.teamkrews.User.model.UserInfo;
 import com.teamkrews.User.model.UserInfos;
 import com.teamkrews.User.service.UserService;
 import com.teamkrews.chatRoomUser.model.ChatRoomUser;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,6 +60,28 @@ public class ChatRoomUserService {
                     ).collect(Collectors.toList());
 
                     UserInfos otherUserInfos = userService.convertToInfos(otherUsers);
+
+                    return convertToResponse(chatRoomUser, otherUserInfos);
+                }
+
+        ).collect(Collectors.toList());
+
+        return new ChatRoomUserResponses(chatRoomUserResponseList);
+    }
+
+    public ChatRoomUserResponses convertToResponsesWithAnonymousUserInfo(List<ChatRoomUser> chatRoomUserList){
+        List<ChatRoomUserResponse> chatRoomUserResponseList = chatRoomUserList.stream().map(
+                (chatRoomUser) -> {
+                    List<ChatRoomUser> otherChatRoomUsers = chatRoomUserRepository.
+                            findByChatRoomAndNotUser(chatRoomUser.getChatRoom(), chatRoomUser.getUser());
+
+                    List<User> otherUsers = otherChatRoomUsers.stream().map((otherChatRoomUser) ->
+                            otherChatRoomUser.getUser()
+                    ).collect(Collectors.toList());
+                    ArrayList<UserInfo> userInfos = new ArrayList<>();
+                    userInfos.add(UserInfo.getAnonymousUserInfo());
+
+                    UserInfos otherUserInfos = new UserInfos(userInfos);
 
                     return convertToResponse(chatRoomUser, otherUserInfos);
                 }

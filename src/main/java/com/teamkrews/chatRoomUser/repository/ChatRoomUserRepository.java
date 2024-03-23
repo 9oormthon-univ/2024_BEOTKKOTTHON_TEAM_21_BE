@@ -17,11 +17,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChatRoomUserRepository extends JpaRepository<ChatRoomUser, Long> {
     List<ChatRoomUser> findByUserAndWorkspace(User user, Workspace workspace);
-
     Optional<ChatRoomUser> findByUserAndWorkspaceAndChatRoom(User user, Workspace workspace, ChatRoom chatRoom);
 
     List<ChatRoomUser> findByUserAndWorkspaceAndIsCreator(User user, Workspace workspace, int isCreator);
 
+    @Query("SELECT cru FROM ChatRoomUser cru LEFT JOIN FETCH cru.lastMessage lm WHERE cru.user = :user AND cru.workspace = :workspace AND cru.isCreator = :isCreator ORDER BY lm.createdAt ASC")
+    List<ChatRoomUser> findByUserAndWorkspaceAndIsCreatorOrderByLastMessage(@Param("user") User user, @Param("workspace") Workspace workspace, @Param("isCreator") int isCreator);
     List<ChatRoomUser> findByChatRoomAndIsCreator(ChatRoom chatRoom, int isCreator);
 
     List<ChatRoomUser> findAllByChatRoomAndNewState(ChatRoom chatRoom, Boolean newState);

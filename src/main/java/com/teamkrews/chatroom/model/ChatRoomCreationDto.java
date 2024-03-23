@@ -13,6 +13,8 @@ public class ChatRoomCreationDto {
         private List<Long> userIds;
         private Boolean isGroup = Boolean.FALSE;
 
+        public ChatRoomCreationDto(){
+        }
         public ChatRoomCreationDto(String workspaceUUID, Long creatorUserId, List<Long> userIds, Boolean isGroup) {
                 this.workspaceUUID = workspaceUUID;
                 this.creatorUserId = creatorUserId;
