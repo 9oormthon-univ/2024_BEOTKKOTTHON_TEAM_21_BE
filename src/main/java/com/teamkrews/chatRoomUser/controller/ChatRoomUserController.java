@@ -27,7 +27,9 @@ public class ChatRoomUserController {
     // @RequestBody는 하나의 메서드에 여러 개일 수 없음 -> 따라서, 두 개의 Long 타입 인자로 받으려면 하나의 DTO 안에 넣어줘야 함!
     @PostMapping("/check/{chatRoomUserId}")
     public ResponseEntity<ApiResponse<Void>> createChatRoom(@AuthenticationPrincipal User user,
-                                                                        @PathVariable Long chatRoomUserId) {
+                                                            @PathVariable Long chatRoomUserId) {
+        log.info("isNew Check Event !!");
+
         chatRoomUserService.checkChatRoomUser(chatRoomUserId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
