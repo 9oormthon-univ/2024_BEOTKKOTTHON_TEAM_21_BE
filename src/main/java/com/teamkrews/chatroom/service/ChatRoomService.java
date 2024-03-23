@@ -104,7 +104,6 @@ public class ChatRoomService {
             ChatRoom chatRoom = chatRoomUser.getChatRoom();
 
             List<ChatRoomUser> chatRoomUsersReceived = chatRoomUserRepository.findByChatRoomAndIsCreator(chatRoom, 0);
-
             parseForResponse(chatRoomDetails, chatRoom, chatRoomUsersReceived);
         }
 

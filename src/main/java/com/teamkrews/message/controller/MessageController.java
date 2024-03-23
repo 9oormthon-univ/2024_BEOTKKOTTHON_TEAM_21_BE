@@ -10,6 +10,7 @@ import com.teamkrews.message.model.request.MessageDTO;
 import com.teamkrews.message.model.response.MessageResponse;
 import com.teamkrews.chatRoomUser.repository.ChatRoomUserRepository;
 import com.teamkrews.chatroom.service.ChatRoomService;
+import com.teamkrews.message.model.response.MessageResponses;
 import com.teamkrews.message.service.MessageService;
 import com.teamkrews.openAI.model.request.MessageTranslatorDTO;
 import com.teamkrews.openAI.service.MessageTranslatorService;
@@ -50,7 +51,7 @@ public class MessageController {
 
     // 특정 채팅방의 메시지 불러오기
     @GetMapping("/list")
-    public ResponseEntity<ApiResponse<List<Message>>> getMessagesWithUserAndWorkspaceAndChatRoom(
+    public ResponseEntity<ApiResponse<MessageResponses>> getMessagesWithUserAndWorkspaceAndChatRoom(
             @AuthenticationPrincipal User user,
             @RequestParam String workspaceUUID,
             @RequestParam Long chatRoomId) {
@@ -65,7 +66,9 @@ public class MessageController {
         ChatRoom chatRoom2 = chatRoomUser.getChatRoom();
 
         List<Message> messages = messageService.getMessages(chatRoom2);
-        return ResponseEntity.ok(ApiResponse.success(messages));
+        MessageResponses messageResponses = messageService.convertMessageResponses(messages);
+
+        return ResponseEntity.ok(ApiResponse.success(messageResponses));
     }
 
     // 메시지 전송 및 저장
