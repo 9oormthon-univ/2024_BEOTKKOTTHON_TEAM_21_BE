@@ -51,11 +51,10 @@
 ## 🖥 시스템 아키텍쳐
 ![image](https://github.com/goormthon-Univ/2024_BEOTKKOTTHON_TEAM_21_BE/assets/62204810/82193082-26d2-4b42-9479-50802f9a6fcd)
 
-
 ## 백엔드 팀원 소개
 
 |       김승언        |       이유재        |                                                                                                               
 | :---------------------------------------------------------------------: | :---------------------------------------------------------------------: |
-|   <img width="160px" src="https://github.com/goormthon-Univ/2024_BEOTKKOTTHON_TEAM_21_BE/assets/119438312/859fe190-b0fa-4c48-809f-b8320b49f4e1" > |             <img width="160px" src="" >    |
+|   <img width="160px" src="https://github.com/goormthon-Univ/2024_BEOTKKOTTHON_TEAM_21_BE/assets/119438312/859fe190-b0fa-4c48-809f-b8320b49f4e1" > |             <img width="200px" src="https://github.com/goormthon-Univ/2024_BEOTKKOTTHON_TEAM_21_BE/assets/119438312/52ae46d8-935a-4ce4-8228-e8c25b05dcda" >    |
 |   [@tmdtmdqorekf](https://github.com/tmdtmdqorekf)   |    [@Lujaec](https://github.com/Lujaec)  |
 | 국민대학교 소프트웨어학과 4학년 | 세종대학교 컴퓨터공학과 4학년 |
